@@ -1,0 +1,146 @@
+// This is your Prisma schema file.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ----------------------------------------------------------------------
+// 核心架構 V3：支援主辦方與長輝分會等「常態性會員」複用架構
+// ----------------------------------------------------------------------
+
+// 租戶：代表主辦方 (例：長輝分會、某某商務協會)
+model Organizer {
+  id       String @id @default(uuid())
+  name     String
+  email    String @unique
+  password String
+
+  events  Event[]
+  members MemberProfile[] // 屬於這個主辦方的常態會員資料庫
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 活動：單次的例會或大型交流會
+model Event {
+  id       String  @id @default(uuid())
+  slug     String  @unique
+  name     String
+  sheetUrl String?
+
+  organizerId String
+  organizer   Organizer @relation(fields: [organizerId], references: [id])
+
+  isActive    Boolean @default(true) // 控制前台連結是否有效
+
+  attendances Attendance[]
+  connections Connection[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 常態會員資料：長輝分會會員紀錄在此，未來參加任何長輝的活動都不用重填資料
+model MemberProfile {
+  id          String    @id @default(uuid())
+  organizerId String
+  organizer   Organizer @relation(fields: [organizerId], references: [id])
+
+  name       String
+  chapter    String @default("無")
+  company    String
+  title      String
+  industry   String
+  services   String
+  lookingFor String
+  painPoints String
+
+  email       String?
+  phone       String?
+  contactInfo String? // 例如: LINE ID / WeChat
+
+  // OpenAI 的 text-embedding-3-small 回傳的浮點數陣列字串表示法 (長度約1536)
+  embedding String?
+
+  qrCodeToken String @unique @default(uuid()) // 每位會員的專屬名片 QR Code
+
+  attendances Attendance[] // 去過哪些活動
+
+  connectionsMade     Connection[] @relation("Connector")
+  connectionsReceived Connection[] @relation("ConnectedTo")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 參與紀錄 (Attendance)：將會員或一次性訪客綁定到某場活動的交集表
+model Attendance {
+  id      String @id @default(uuid())
+  eventId String
+  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  // 若為常態會員，則會關聯此欄位
+  memberId String?
+  member   MemberProfile? @relation(fields: [memberId], references: [id])
+
+  // 若為不打算入會的「一次性現場訪客」，直接將資料存在這裡
+  visitorName        String?
+  visitorCompany     String?
+  visitorTitle       String?
+  visitorIndustry    String?
+  visitorServices    String?
+  visitorLookingFor  String?
+  visitorPainPoints  String?
+  visitorContactInfo String?
+  visitorQrCodeToken String? @unique
+
+  createdAt DateTime @default(now())
+}
+
+// ----------------------------------------------------------------------
+// 「已實體交換名片 / QR Code 互認」追蹤表
+// ----------------------------------------------------------------------
+model Connection {
+  id String @id @default(uuid())
+
+  // 主動方 (掃描者)
+  connectorId String
+  connector   MemberProfile @relation("Connector", fields: [connectorId], references: [id])
+
+  // 被動方 (被掃者)
+  connectedToId String
+  connectedTo   MemberProfile @relation("ConnectedTo", fields: [connectedToId], references: [id])
+
+  eventId String? // 記錄是在哪個活動建立的連結
+  event   Event?  @relation(fields: [eventId], references: [id])
+
+  method String   @default("qr_scan")
+  metAt  DateTime @default(now())
+
+  messages Message[]
+
+  @@unique([connectorId, connectedToId])
+}
+
+// ----------------------------------------------------------------------
+// 閱後即焚限時聊天系統
+// ----------------------------------------------------------------------
+model Message {
+  id String @id @default(uuid())
+
+  connectionId String
+  connection   Connection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+
+  senderId String // 資料庫中 MemberProfile 的 ID
+  content  String
+
+  isRead Boolean @default(false)
+
+  createdAt DateTime @default(now())
+}

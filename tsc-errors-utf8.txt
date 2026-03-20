@@ -1,0 +1,27 @@
+.next/dev/types/validator.ts(117,31): error TS2344: Type 'typeof import("C:/Users/Samuel/.gemini/antigravity/scratch/networking-ai/src/app/api/admin/members/[id]/delete/route")' does not satisfy the constraint 'RouteHandlerConfig<"/api/admin/members/[id]/delete">'.
+  Types of property 'POST' are incompatible.
+    Type '(req: NextRequest, { params }: { params: { id: string; }; }) => Promise<NextResponse<unknown>>' is not assignable to type '(request: NextRequest, context: { params: Promise<{ id: string; }>; }) => void | Response | Promise<void | Response>'.
+      Types of parameters '__1' and 'context' are incompatible.
+        Type '{ params: Promise<{ id: string; }>; }' is not assignable to type '{ params: { id: string; }; }'.
+          Types of property 'params' are incompatible.
+            Property 'id' is missing in type 'Promise<{ id: string; }>' but required in type '{ id: string; }'.
+.next/types/validator.ts(117,31): error TS2344: Type 'typeof import("C:/Users/Samuel/.gemini/antigravity/scratch/networking-ai/src/app/api/admin/members/[id]/delete/route")' does not satisfy the constraint 'RouteHandlerConfig<"/api/admin/members/[id]/delete">'.
+  Types of property 'POST' are incompatible.
+    Type '(req: NextRequest, { params }: { params: { id: string; }; }) => Promise<NextResponse<unknown>>' is not assignable to type '(request: NextRequest, context: { params: Promise<{ id: string; }>; }) => void | Response | Promise<void | Response>'.
+      Types of parameters '__1' and 'context' are incompatible.
+        Type '{ params: Promise<{ id: string; }>; }' is not assignable to type '{ params: { id: string; }; }'.
+          Types of property 'params' are incompatible.
+            Property 'id' is missing in type 'Promise<{ id: string; }>' but required in type '{ id: string; }'.
+src/app/admin/event/[id]/page.tsx(13,18): error TS2322: Type 'unknown' is not assignable to type 'string | StringFilter<"Event"> | undefined'.
+src/app/admin/event/[id]/page.tsx(24,25): error TS2339: Property 'attendances' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; slug: string; sheetUrl: string | null; organizerId: string; }'.
+src/app/admin/event/[id]/page.tsx(24,41): error TS7006: Parameter 'a' implicitly has an 'any' type.
+src/app/admin/event/[id]/page.tsx(75,30): error TS7006: Parameter 'member' implicitly has an 'any' type.
+src/app/admin/page.tsx(12,14): error TS2322: Type 'unknown' is not assignable to type 'string | StringFilter<"Event"> | undefined'.
+src/app/admin/page.tsx(29,15): error TS2322: Type 'unknown' is not assignable to type 'ReactNode'.
+src/app/admin/page.tsx(70,94): error TS2339: Property '_count' does not exist on type '{ name: string; id: string; createdAt: Date; updatedAt: Date; slug: string; sheetUrl: string | null; organizerId: string; }'.
+src/app/api/admin/event/route.ts(35,69): error TS2322: Type 'unknown' is not assignable to type 'string | StringFilter<"Event"> | undefined'.
+src/app/api/admin/event/route.ts(42,40): error TS2322: Type 'unknown' is not assignable to type 'string | undefined'.
+src/app/api/admin/event/route.ts(60,11): error TS2322: Type 'unknown' is not assignable to type 'string | undefined'.
+src/app/api/admin/members/[id]/delete/route.ts(20,27): error TS2322: Type 'unknown' is not assignable to type 'string | StringFilter<"Event"> | undefined'.
+src/components/GuestForm.tsx(244,60): error TS2322: Type 'string | boolean | undefined' is not assignable to type 'string | number | readonly string[] | undefined'.
+  Type 'false' is not assignable to type 'string | number | readonly string[] | undefined'.

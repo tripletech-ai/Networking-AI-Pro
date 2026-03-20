@@ -1,0 +1,1 @@
+src/app/api/admin/members/[id]/delete/route.ts(20,27): error TS2322: Type 'unknown' is not assignable to type 'string | StringFilter<"Event"> | undefined'.

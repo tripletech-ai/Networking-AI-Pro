@@ -1,0 +1,286 @@
+﻿
+> networking-ai@0.1.0 lint
+> eslint
+
+
+C:\Users\Samuel\.gemini\antigravity\scratch\networking-ai\src\app\admin\page.tsx
+  15:9   error    Do not use an `<a>` element to navigate to `/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages  @next/next/no-html-link-for-pages
+  95:26  warning  'err' is defined but never used                                                                                                                        @typescript-eslint/no-unused-vars
+
+C:\Users\Samuel\.gemini\antigravity\scratch\networking-ai\src\app\api\match\route.ts
+  27:12  warning  'e' is defined but never used             @typescript-eslint/no-unused-vars
+  81:14  warning  'err' is defined but never used           @typescript-eslint/no-unused-vars
+  92:48  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  94:44  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Samuel\.gemini\antigravity\scratch\networking-ai\src\app\api\sync-sheets\route.ts
+  40:27  warning  '_req' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Samuel\.gemini\antigravity\scratch\networking-ai\src\components\GuestForm.tsx
+  238:85  warning  '_id' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Samuel\.gemini\antigravity\scratch\networking-ai\src\components\NetworkGrid.tsx
+  117:10  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Samuel\.gemini\antigravity\scratch\networking-ai\src\components\NetworkGrid.tsx:117:10
+  115 |
+  116 |       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginBottom: 32 }}>
+> 117 |         <GridCell position={0} />
+      |          ^^^^^^^^ This component is created during render
+  118 |         <GridCell position={1} />
+  119 |         <GridCell position={2} />
+  120 |         <GridCell position={3} />
+
+C:\Users\Samuel\.gemini\antigravity\scratch\networking-ai\src\components\NetworkGrid.tsx:41:20
+  39 |   };
+  40 |
+> 41 |   const GridCell = ({ position }: { position: number }) => {
+     |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 42 |     const person = byPos(position);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 43 |     if (!person) {
+     ??     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 80 |     );
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 81 |   };
+     | ^^^^ The component is created during render here
+  82 |
+  83 |   const CenterCell = () => (
+  84 |     <div className="glass-card" style={{                         react-hooks/static-components
+  118:10  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Samuel\.gemini\antigravity\scratch\networking-ai\src\components\NetworkGrid.tsx:118:10
+  116 |       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginBottom: 32 }}>
+  117 |         <GridCell position={0} />
+> 118 |         <GridCell position={1} />
+      |          ^^^^^^^^ This component is created during render
+  119 |         <GridCell position={2} />
+  120 |         <GridCell position={3} />
+  121 |         <CenterCell />
+
+C:\Users\Samuel\.gemini\antigravity\scratch\networking-ai\src\components\NetworkGrid.tsx:41:20
+  39 |   };
+  40 |
+> 41 |   const GridCell = ({ position }: { position: number }) => {
+     |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 42 |     const person = byPos(position);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 43 |     if (!person) {
+     ??     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 80 |     );
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 81 |   };
+     | ^^^^ The component is created during render here
+  82 |
+  83 |   const CenterCell = () => (
+  84 |     <div className="glass-card" style={{  react-hooks/static-components
+  119:10  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Samuel\.gemini\antigravity\scratch\networking-ai\src\components\NetworkGrid.tsx:119:10
+  117 |         <GridCell position={0} />
+  118 |         <GridCell position={1} />
+> 119 |         <GridCell position={2} />
+      |          ^^^^^^^^ This component is created during render
+  120 |         <GridCell position={3} />
+  121 |         <CenterCell />
+  122 |         <GridCell position={4} />
+
+C:\Users\Samuel\.gemini\antigravity\scratch\networking-ai\src\components\NetworkGrid.tsx:41:20
+  39 |   };
+  40 |
+> 41 |   const GridCell = ({ position }: { position: number }) => {
+     |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 42 |     const person = byPos(position);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 43 |     if (!person) {
+     ??     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 80 |     );
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 81 |   };
+     | ^^^^ The component is created during render here
+  82 |
+  83 |   const CenterCell = () => (
+  84 |     <div className="glass-card" style={{                                                                          react-hooks/static-components
+  120:10  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Samuel\.gemini\antigravity\scratch\networking-ai\src\components\NetworkGrid.tsx:120:10
+  118 |         <GridCell position={1} />
+  119 |         <GridCell position={2} />
+> 120 |         <GridCell position={3} />
+      |          ^^^^^^^^ This component is created during render
+  121 |         <CenterCell />
+  122 |         <GridCell position={4} />
+  123 |         <GridCell position={5} />
+
+C:\Users\Samuel\.gemini\antigravity\scratch\networking-ai\src\components\NetworkGrid.tsx:41:20
+  39 |   };
+  40 |
+> 41 |   const GridCell = ({ position }: { position: number }) => {
+     |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 42 |     const person = byPos(position);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 43 |     if (!person) {
+     ??     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 80 |     );
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 81 |   };
+     | ^^^^ The component is created during render here
+  82 |
+  83 |   const CenterCell = () => (
+  84 |     <div className="glass-card" style={{                                                                          react-hooks/static-components
+  121:10  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Samuel\.gemini\antigravity\scratch\networking-ai\src\components\NetworkGrid.tsx:121:10
+  119 |         <GridCell position={2} />
+  120 |         <GridCell position={3} />
+> 121 |         <CenterCell />
+      |          ^^^^^^^^^^ This component is created during render
+  122 |         <GridCell position={4} />
+  123 |         <GridCell position={5} />
+  124 |         <GridCell position={6} />
+
+C:\Users\Samuel\.gemini\antigravity\scratch\networking-ai\src\components\NetworkGrid.tsx:83:22
+   81 |   };
+   82 |
+>  83 |   const CenterCell = () => (
+      |                      ^^^^^^^
+>  84 |     <div className="glass-card" style={{
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>  85 |       padding: '16px 12px', display: 'flex', flexDirection: 'column',
+      ??      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 102 |     </div>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 103 |   );
+      | ^^^^ The component is created during render here
+  104 |
+  105 |   return (
+  106 |     <div className="fade-in-up">                                                                       react-hooks/static-components
+  122:10  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Samuel\.gemini\antigravity\scratch\networking-ai\src\components\NetworkGrid.tsx:122:10
+  120 |         <GridCell position={3} />
+  121 |         <CenterCell />
+> 122 |         <GridCell position={4} />
+      |          ^^^^^^^^ This component is created during render
+  123 |         <GridCell position={5} />
+  124 |         <GridCell position={6} />
+  125 |         <GridCell position={7} />
+
+C:\Users\Samuel\.gemini\antigravity\scratch\networking-ai\src\components\NetworkGrid.tsx:41:20
+  39 |   };
+  40 |
+> 41 |   const GridCell = ({ position }: { position: number }) => {
+     |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 42 |     const person = byPos(position);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 43 |     if (!person) {
+     ??     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 80 |     );
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 81 |   };
+     | ^^^^ The component is created during render here
+  82 |
+  83 |   const CenterCell = () => (
+  84 |     <div className="glass-card" style={{                                                                          react-hooks/static-components
+  123:10  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Samuel\.gemini\antigravity\scratch\networking-ai\src\components\NetworkGrid.tsx:123:10
+  121 |         <CenterCell />
+  122 |         <GridCell position={4} />
+> 123 |         <GridCell position={5} />
+      |          ^^^^^^^^ This component is created during render
+  124 |         <GridCell position={6} />
+  125 |         <GridCell position={7} />
+  126 |       </div>
+
+C:\Users\Samuel\.gemini\antigravity\scratch\networking-ai\src\components\NetworkGrid.tsx:41:20
+  39 |   };
+  40 |
+> 41 |   const GridCell = ({ position }: { position: number }) => {
+     |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 42 |     const person = byPos(position);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 43 |     if (!person) {
+     ??     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 80 |     );
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 81 |   };
+     | ^^^^ The component is created during render here
+  82 |
+  83 |   const CenterCell = () => (
+  84 |     <div className="glass-card" style={{                                                                                               react-hooks/static-components
+  124:10  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Samuel\.gemini\antigravity\scratch\networking-ai\src\components\NetworkGrid.tsx:124:10
+  122 |         <GridCell position={4} />
+  123 |         <GridCell position={5} />
+> 124 |         <GridCell position={6} />
+      |          ^^^^^^^^ This component is created during render
+  125 |         <GridCell position={7} />
+  126 |       </div>
+  127 |
+
+C:\Users\Samuel\.gemini\antigravity\scratch\networking-ai\src\components\NetworkGrid.tsx:41:20
+  39 |   };
+  40 |
+> 41 |   const GridCell = ({ position }: { position: number }) => {
+     |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 42 |     const person = byPos(position);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 43 |     if (!person) {
+     ??     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 80 |     );
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 81 |   };
+     | ^^^^ The component is created during render here
+  82 |
+  83 |   const CenterCell = () => (
+  84 |     <div className="glass-card" style={{                                                                                                                      react-hooks/static-components
+  125:10  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Samuel\.gemini\antigravity\scratch\networking-ai\src\components\NetworkGrid.tsx:125:10
+  123 |         <GridCell position={5} />
+  124 |         <GridCell position={6} />
+> 125 |         <GridCell position={7} />
+      |          ^^^^^^^^ This component is created during render
+  126 |       </div>
+  127 |
+  128 |       {summary && (
+
+C:\Users\Samuel\.gemini\antigravity\scratch\networking-ai\src\components\NetworkGrid.tsx:41:20
+  39 |   };
+  40 |
+> 41 |   const GridCell = ({ position }: { position: number }) => {
+     |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 42 |     const person = byPos(position);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 43 |     if (!person) {
+     ??     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 80 |     );
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 81 |   };
+     | ^^^^ The component is created during render here
+  82 |
+  83 |   const CenterCell = () => (
+  84 |     <div className="glass-card" style={{                                                                                                                                    react-hooks/static-components
+
+??17 problems (12 errors, 5 warnings)
+
