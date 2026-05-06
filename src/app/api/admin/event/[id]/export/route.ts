@@ -8,7 +8,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   if (!organizer) return new NextResponse('Unauthorized', { status: 401 });
 
   const event = await prisma.event.findFirst({
-    where: { id, organizerId: organizer.id },
+    where: { id, organizerId: String(organizer.id) },
     include: {
       attendances: { include: { member: true } }
     }
