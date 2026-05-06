@@ -6,18 +6,27 @@ import { getSession } from '@/lib/auth';
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
-async function getEmbedding(text: string) {
-  if (!OPENAI_API_KEY) return null;
+async function getBulkEmbeddings(texts: string[]) {
+  if (!OPENAI_API_KEY || texts.length === 0) return Array(texts.length).fill(null);
   try {
     const res = await fetch('https://api.openai.com/v1/embeddings', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${OPENAI_API_KEY}` },
-      body: JSON.stringify({ input: text, model: 'text-embedding-3-small' })
+      body: JSON.stringify({ input: texts, model: 'text-embedding-3-small' })
     });
     const data = await res.json();
-    return data?.data?.[0]?.embedding || null;
+    if (data?.data && Array.isArray(data.data)) {
+      // Ensure the returned array matches the input order
+      const embeddings = Array(texts.length).fill(null);
+      data.data.forEach((item: any) => {
+        if (item.index !== undefined) embeddings[item.index] = item.embedding;
+      });
+      return embeddings;
+    }
+    return Array(texts.length).fill(null);
   } catch (err) {
-    return null;
+    console.error('Bulk embedding error:', err);
+    return Array(texts.length).fill(null);
   }
 }
 
@@ -47,14 +56,20 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: true, eventId: event.id, message: '活動建立成功，目前無匯入名單。' });
     }
 
-    let imported = 0;
-    for (const g of guests) {
-      if (!g.name) continue;
-      
-      const textToEmbed = `服務：${g.services || '無'}。尋找：${g.lookingFor || '無'}。痛點：${g.painPoints || '無'}`;
-      const embeddingArray = await getEmbedding(textToEmbed);
-      const embeddingStr = embeddingArray ? JSON.stringify(embeddingArray) : null;
+    // Bulk prepare texts
+    const textsToEmbed = guests.map((g: any) => 
+      g.name ? `服務：${g.services || '無'}。尋找：${g.lookingFor || '無'}。痛點：${g.painPoints || '無'}` : ''
+    ).filter((t: string) => t !== '');
 
+    const validGuests = guests.filter((g: any) => g.name);
+    const embeddings = await getBulkEmbeddings(textsToEmbed);
+
+    let imported = 0;
+    
+    // Create member profiles concurrently using Promise.all or createMany if available
+    // We use Promise.all to get back the IDs for Attendance creation
+    const memberPromises = validGuests.map(async (g: any, idx: number) => {
+      const embeddingStr = embeddings[idx] ? JSON.stringify(embeddings[idx]) : null;
       const member = await prisma.memberProfile.create({
         data: {
           organizerId: String(session.id),
@@ -64,12 +79,15 @@ export async function POST(req: NextRequest) {
           embedding: embeddingStr
         }
       });
-
+      
       await prisma.attendance.create({
-        data: { eventId: event.id, memberId: member.id }
+        data: { eventId: event.id, memberId: member.id, checkinAt: null }
       });
-      imported++;
-    }
+      return member;
+    });
+
+    await Promise.all(memberPromises);
+    imported = validGuests.length;
 
     // 更新 Config (為了保持舊前端程式碼相容)
     try {

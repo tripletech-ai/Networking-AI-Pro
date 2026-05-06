@@ -48,17 +48,10 @@ export async function POST(req: NextRequest) {
 
   let returnedMemberId = body.id || null;
 
-  // 嘗試讀取 config 找出現在的 Event
-  let eventId = null;
+  // Directly use eventId from the request body instead of relying on config.json
+  const eventId = body.eventId || null;
+  
   let organizerId = null;
-  try {
-    const p = path.join(process.cwd(), 'src', 'data', 'config.json');
-    if (fs.existsSync(p)) {
-      const conf = JSON.parse(fs.readFileSync(p, 'utf-8'));
-      eventId = conf.eventId;
-    }
-  } catch {}
-
   const currentEvent = eventId ? await prisma.event.findUnique({ where: { id: eventId } }) : null;
   if (currentEvent) organizerId = currentEvent.organizerId;
 
@@ -76,7 +69,13 @@ export async function POST(req: NextRequest) {
     });
     returnedMemberId = newMember.id;
     await prisma.attendance.create({
-      data: { eventId, memberId: newMember.id }
+      data: { eventId, memberId: newMember.id, checkinAt: new Date() }
+    });
+  } else if (!isWalkIn && eventId && returnedMemberId) {
+    // 已經在名單內的人，更新報到時間
+    await prisma.attendance.updateMany({
+      where: { eventId, memberId: returnedMemberId },
+      data: { checkinAt: new Date() }
     });
   }
 

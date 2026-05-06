@@ -12,8 +12,9 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
       where: { id: String(id), organizerId: String(organizer.id) },
       include: {
         attendances: {
+          where: { checkinAt: { not: null } },
           include: { member: true },
-          orderBy: { createdAt: 'desc' }
+          orderBy: { checkinAt: 'desc' }
         }
       }
     });
@@ -31,7 +32,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
           title: a.member?.title || a.visitorTitle || '',
           industry: a.member?.industry || a.visitorIndustry || '未分類',
           chapter: ch,
-          checkinTime: a.createdAt instanceof Date ? a.createdAt.toISOString() : new Date(a.createdAt).toISOString(),
+          checkinTime: a.checkinAt ? (a.checkinAt instanceof Date ? a.checkinAt.toISOString() : new Date(a.checkinAt).toISOString()) : null,
         };
       });
 

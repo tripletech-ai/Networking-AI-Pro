@@ -102,6 +102,7 @@ model Attendance {
   visitorQrCodeToken String? @unique
 
   createdAt DateTime @default(now())
+  checkinAt DateTime?
 }
 
 // ----------------------------------------------------------------------
