@@ -9,19 +9,38 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
   try {
     const data = await req.json();
-    if (!data.name) return NextResponse.json({ error: '姓名必填' }, { status: 400 });
+    
+    // Safety & Input Validation
+    if (!data || typeof data !== 'object') {
+      return NextResponse.json({ error: '無效的資料格式' }, { status: 400 });
+    }
+    
+    if (!data.name || typeof data.name !== 'string' || data.name.trim() === '') {
+      return NextResponse.json({ error: '姓名必填且必須為有效的字串' }, { status: 400 });
+    }
+    
+    if (data.name.length > 50) {
+      return NextResponse.json({ error: '姓名不得超過 50 個字元' }, { status: 400 });
+    }
+    
+    // Sanitize values to ensure they are strings
+    const safeString = (val: any, maxLen: number = 200) => {
+      if (!val) return '';
+      const str = String(val).trim();
+      return str.substring(0, maxLen);
+    };
 
     const member = await prisma.memberProfile.create({
       data: {
         organizerId: String(organizer.id),
-        name: data.name,
-        company: data.company || '',
-        title: data.title || '',
-        industry: data.industry || '',
-        chapter: data.chapter || '',
-        services: data.services || '',
-        lookingFor: data.lookingFor || '',
-        painPoints: data.painPoints || '',
+        name: safeString(data.name, 50),
+        company: safeString(data.company, 100),
+        title: safeString(data.title, 50),
+        industry: safeString(data.industry, 50),
+        chapter: safeString(data.chapter, 50),
+        services: safeString(data.services, 500),
+        lookingFor: safeString(data.lookingFor, 500),
+        painPoints: safeString(data.painPoints, 500),
       }
     });
 

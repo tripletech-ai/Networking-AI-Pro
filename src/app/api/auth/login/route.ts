@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { signToken } from '@/lib/auth';
+import bcrypt from 'bcryptjs';
 
 export async function POST(req: NextRequest) {
   try {
@@ -17,7 +18,7 @@ export async function POST(req: NextRequest) {
       create: {
         name: 'Super Admin (創世代)',
         email: 'admin@networking-ai.com',
-        password: 'admin' // In production, this should be hashed
+        password: await bcrypt.hash('admin', 10)
       }
     });
     
@@ -27,7 +28,7 @@ export async function POST(req: NextRequest) {
       create: {
         name: '長輝分會',
         email: 'demo@networking-ai.com',
-        password: 'demo'
+        password: await bcrypt.hash('demo', 10)
       }
     });
 
@@ -35,9 +36,25 @@ export async function POST(req: NextRequest) {
       where: { email }
     });
 
-    // In a real app, compare bcrypt hashes. For this MVP, plaintext match.
-    if (!user || user.password !== password) {
+    if (!user) {
       return NextResponse.json({ error: '信箱或密碼錯誤' }, { status: 401 });
+    }
+
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    
+    // Fallback logic for existing unhashed passwords (smooth migration)
+    const isPlaintextMatch = user.password === password;
+    
+    if (!isValidPassword && !isPlaintextMatch) {
+      return NextResponse.json({ error: '信箱或密碼錯誤' }, { status: 401 });
+    }
+
+    // Auto-migrate plaintext to hashed if needed
+    if (isPlaintextMatch) {
+      await prisma.organizer.update({
+        where: { id: user.id },
+        data: { password: await bcrypt.hash(password, 10) }
+      });
     }
 
     const token = await signToken({
