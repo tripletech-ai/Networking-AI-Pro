@@ -106,8 +106,19 @@ export default function NewEventPage() {
       clearTimeout(progressTimer);
       clearTimeout(progressTimer2);
       if (data.success) {
-        setProgress(`✓ ${data.message}`);
-        setTimeout(() => { router.push('/admin'); router.refresh(); }, 800);
+        setProgress(`✓ 匯入成功！即將返回管理中心...`);
+        
+        if (data.memberIds && data.memberIds.length > 0) {
+          // Trigger embedding in the background with keepalive so it survives navigation
+          fetch('/api/admin/embed', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ memberIds: data.memberIds, guests: mappedGuests2 }),
+            keepalive: true
+          }).catch(() => {});
+        }
+
+        setTimeout(() => { router.push('/admin'); router.refresh(); }, 500);
       } else {
         setError(data.error || '發生錯誤');
         setProgress('');

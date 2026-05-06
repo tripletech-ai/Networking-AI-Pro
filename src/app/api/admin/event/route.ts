@@ -77,19 +77,15 @@ export async function POST(req: NextRequest) {
       memberIds.push(...created);
     }
 
-    // ─── Phase 2: Generate embeddings in background (non-blocking) ───
-    // We use a self-hosted fire-and-forget pattern compatible with Netlify
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-    fetch(`${baseUrl}/api/admin/embed`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ memberIds, guests: validGuests })
-    }).catch(() => {}); // fire and forget
+    // ─── Phase 2: Client-side trigger ───
+    // We return memberIds so the client can trigger the embed API using keepalive: true.
+    // This avoids Netlify serverless timeout blocking the response.
 
     return NextResponse.json({
       success: true,
       eventId: event.id,
-      message: `成功匯入 ${memberIds.length} 位來賓！AI 向量化正在背景進行中。`
+      memberIds,
+      message: `成功建立活動！`
     });
   } catch (err) {
     console.error('[Admin API Error]', err);

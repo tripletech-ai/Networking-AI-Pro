@@ -67,7 +67,9 @@ export default function GuestForm({ onSubmit, error }: Props) {
     setMagicLoading(false);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!walkinValid || isSubmitting) return;
     setIsSubmitting(true);
     onSubmit(form);
     // Reset after 10s in case error occurs
