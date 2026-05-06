@@ -46,14 +46,20 @@ export default function EventClient({ eventName }: { eventName: string }) {
   }, [appState]);
 
   useEffect(() => {
-    const timer = setTimeout(() => setDebouncedQuery(searchQuery), 300);
-    return () => clearTimeout(timer);
+    setDebouncedQuery(searchQuery);
   }, [searchQuery]);
 
-  const { data: searchResults = [], isLoading: isSearching } = useSWR(
-    debouncedQuery.length > 0 ? `/api/members/search?q=${encodeURIComponent(debouncedQuery)}&eventId=${eventId}` : null,
+  // Fetch all members ONCE and do local search for blazing fast UX
+  const { data: allMembers = [], isLoading: isFetchingMembers } = useSWR(
+    eventId ? `/api/members/all?eventId=${eventId}` : null,
     (url: string) => fetch(url).then(res => res.json())
   );
+
+  const searchResults = debouncedQuery.length > 0 
+    ? allMembers.filter((m: any) => m.name?.toLowerCase().includes(debouncedQuery.toLowerCase())).slice(0, 10)
+    : [];
+  
+  const isSearching = false; // local search is instant
 
   const loadingMessages = [
     '正在存取全場商務數據庫...',

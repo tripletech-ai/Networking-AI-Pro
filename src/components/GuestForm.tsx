@@ -147,8 +147,9 @@ export default function GuestForm({ onSubmit, error }: Props) {
       <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', margin: '0 0 24px' }} />
 
       {/* 表單欄位 */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
-        {([
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+          {([
           ['name', 'name', '姓名', '王大明', true],
           ['chapter', 'chapter', '所屬分會名稱', '若無請填無', false],
           ['company', 'company', '公司或組織名稱', '某某科技有限公司', true],
@@ -162,6 +163,7 @@ export default function GuestForm({ onSubmit, error }: Props) {
               className="input-field" placeholder={ph} value={(form as any)[field]}
               style={{ background: '#fff', border: '1px solid #e2e8f0', color: 'var(--text-primary)' }}
               onChange={e => setForm({ ...form, [field]: e.target.value })}
+              required={req}
             />
           </div>
         ))}
@@ -171,6 +173,7 @@ export default function GuestForm({ onSubmit, error }: Props) {
           <select
             className="input-field" value={form.industry} style={{ cursor: 'pointer', background: '#fff', border: '1px solid #e2e8f0', color: 'var(--text-primary)' }}
             onChange={e => setForm({ ...form, industry: e.target.value })}
+            required
           >
             <option value="" style={{ background: '#fff' }}>請選擇您的分類</option>
             {INDUSTRY_OPTIONS.map(opt => <option key={opt} value={opt} style={{ background: '#fff' }}>{opt}</option>)}
@@ -183,6 +186,7 @@ export default function GuestForm({ onSubmit, error }: Props) {
             className="input-field" placeholder="例如：專注B2B品牌重塑設計" value={form.services}
             style={{ background: '#fff', border: '1px solid #e2e8f0', color: 'var(--text-primary)' }}
             onChange={e => setForm({ ...form, services: e.target.value })}
+            required
           />
         </div>
 
@@ -192,6 +196,7 @@ export default function GuestForm({ onSubmit, error }: Props) {
             className="input-field" placeholder="例如：尋求與大型零售通路的採購經理合作" value={form.lookingFor}
             style={{ background: '#fff', border: '1px solid #e2e8f0', color: 'var(--text-primary)' }}
             onChange={e => setForm({ ...form, lookingFor: e.target.value })}
+            required
           />
         </div>
 
@@ -201,6 +206,7 @@ export default function GuestForm({ onSubmit, error }: Props) {
             className="input-field" style={{ minHeight: 90, resize: 'vertical', background: '#fff', border: '1px solid #e2e8f0', color: 'var(--text-primary)' }}
             placeholder="例如：行銷成本越來越高但轉換率降低，需要尋求新的線下轉換管道" value={form.painPoints}
             onChange={e => setForm({ ...form, painPoints: e.target.value })}
+            required
           />
         </div>
 
@@ -212,22 +218,23 @@ export default function GuestForm({ onSubmit, error }: Props) {
             onChange={e => setForm({ ...form, contactInfo: e.target.value })}
           />
         </div>
-      </div>
-
-      {error && (
-        <div style={{ marginTop: 24, padding: 16, borderRadius: 10, border: '1px solid rgba(140, 115, 85, 0.4)', background: 'rgba(140, 115, 85, 0.1)', color: '#c5a880', fontSize: 14 }}>
-          無法送出：{error}
         </div>
-      )}
 
-      <button
-        className="btn-primary"
-        style={{ width: '100%', marginTop: 36, padding: '16px', fontSize: 16, opacity: (!walkinValid || isSubmitting) ? 0.7 : 1, transition: 'opacity 0.2s' }}
-        disabled={!walkinValid || isSubmitting}
-        onClick={handleSubmit}
-      >
-        {isSubmitting ? <><Spinner />AI 分析中，請稍候...</> : '儲存資料並啟動高階運算'}
-      </button>
+        {error && (
+          <div style={{ marginTop: 24, padding: 16, borderRadius: 10, border: '1px solid rgba(140, 115, 85, 0.4)', background: 'rgba(140, 115, 85, 0.1)', color: '#c5a880', fontSize: 14 }}>
+            無法送出：{error}
+          </div>
+        )}
+
+        <button
+          type="submit"
+          className="btn-primary"
+          style={{ width: '100%', marginTop: 36, padding: '16px', fontSize: 16, opacity: isSubmitting ? 0.7 : 1, transition: 'opacity 0.2s' }}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? <><Spinner />AI 分析中，請稍候...</> : '儲存資料並啟動高階運算'}
+        </button>
+      </form>
     </div>
   );
 }

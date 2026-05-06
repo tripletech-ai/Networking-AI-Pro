@@ -38,9 +38,10 @@ async function getEmbedding(text: string) {
 }
 
 export async function POST(req: NextRequest) {
-  if (!OPENAI_API_KEY) return NextResponse.json({ error: 'API key 未設定' }, { status: 500 });
+  try {
+    if (!OPENAI_API_KEY) return NextResponse.json({ error: 'API key 未設定' }, { status: 500 });
 
-  const body = await req.json();
+    const body = await req.json();
   const { name, chapter, mode, company, title, industry, services, lookingFor, painPoints, isWalkIn } = body;
 
   const userText = `服務：${services}。尋找：${lookingFor}。痛點：${painPoints}`;
@@ -55,8 +56,8 @@ export async function POST(req: NextRequest) {
   const currentEvent = eventId ? await prisma.event.findUnique({ where: { id: eventId } }) : null;
   if (currentEvent) organizerId = currentEvent.organizerId;
 
-  // 如果是現場空降的嘉賓，直接寫入資料庫
-  if (isWalkIn && eventId && organizerId) {
+  // 如果是現場空降的嘉賓，只有在 mode === 'match' 時寫入資料庫 (避免併發寫入兩次)
+  if (isWalkIn && eventId && organizerId && mode === 'match') {
     const embeddingStr = userEmbedding ? JSON.stringify(userEmbedding) : null;
     const newMember = await prisma.memberProfile.create({
       data: {
@@ -71,8 +72,8 @@ export async function POST(req: NextRequest) {
     await prisma.attendance.create({
       data: { eventId, memberId: newMember.id, checkinAt: new Date() }
     });
-  } else if (!isWalkIn && eventId && returnedMemberId) {
-    // 已經在名單內的人，更新報到時間
+  } else if (!isWalkIn && eventId && returnedMemberId && mode === 'match') {
+    // 已經在名單內的人，更新報到時間 (同樣只做一次)
     await prisma.attendance.updateMany({
       where: { eventId, memberId: returnedMemberId },
       data: { checkinAt: new Date() }
@@ -189,4 +190,8 @@ ${guestListText}
   } catch (err) {
     return NextResponse.json({ error: '連線或解析失敗' }, { status: 500 });
   }
+} catch (error: any) {
+  console.error('Match API Error:', error);
+  return NextResponse.json({ error: error.message || '發生未知錯誤' }, { status: 500 });
+}
 }
