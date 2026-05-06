@@ -8,6 +8,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState('admin');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -25,8 +26,8 @@ export default function LoginPage() {
       const data = await res.json();
       
       if (data.success) {
+        setRedirecting(true);
         router.push('/admin');
-        router.refresh();
       } else {
         setError(data.error);
       }
@@ -36,6 +37,19 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
+
+  if (redirecting) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#f8fafc', gap: 20 }}>
+        <div style={{ position: 'relative', width: 56, height: 56 }}>
+          <div style={{ position: 'absolute', inset: 0, border: '3px solid #e2e8f0', borderRadius: '50%' }}/>
+          <div style={{ position: 'absolute', inset: 0, border: '3px solid transparent', borderTopColor: 'var(--accent-gold)', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }}/>
+        </div>
+        <div style={{ fontSize: 16, color: 'var(--accent-blue)', fontWeight: 600 }}>進入後台中...</div>
+        <style>{`@keyframes spin { 100% { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8fafc' }}>
@@ -85,8 +99,14 @@ export default function LoginPage() {
 
           {error && <div style={{ color: '#ef4444', fontSize: 13, textAlign: 'center' }}>{error}</div>}
 
-          <button type="submit" className="btn-primary" style={{ marginTop: 8, padding: '16px' }} disabled={loading}>
-            {loading ? '驗證中...' : '進入後台控制面板'}
+          <button type="submit" className="btn-primary" style={{ marginTop: 8, padding: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, width: '100%' }} disabled={loading}>
+            {loading ? (
+              <>
+                <span style={{ display: 'inline-block', width: 16, height: 16, border: '2px solid rgba(255,255,255,0.3)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+                驗證中...
+                <style>{`@keyframes spin { 100% { transform: rotate(360deg); } }`}</style>
+              </>
+            ) : '進入後台控制面板'}
           </button>
         </form>
 

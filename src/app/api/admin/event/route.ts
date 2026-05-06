@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import fs from 'fs';
-import path from 'path';
 import { getSession } from '@/lib/auth';
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
@@ -16,7 +14,6 @@ async function getBulkEmbeddings(texts: string[]) {
     });
     const data = await res.json();
     if (data?.data && Array.isArray(data.data)) {
-      // Ensure the returned array matches the input order
       const embeddings = Array(texts.length).fill(null);
       data.data.forEach((item: any) => {
         if (item.index !== undefined) embeddings[item.index] = item.embedding;
@@ -40,11 +37,9 @@ export async function POST(req: NextRequest) {
 
     let event;
     if (eventId) {
-      // Import into existing event
       event = await prisma.event.findUnique({ where: { id: String(eventId), organizerId: String(session.id) } });
       if (!event) return NextResponse.json({ error: '找不到活動' }, { status: 404 });
     } else {
-      // Create new event
       if (!eventName) return NextResponse.json({ error: '請提供活動名稱' }, { status: 400 });
       const slug = String(eventName).toLowerCase().replace(/\s+/g, '-') + '-' + Date.now();
       event = await prisma.event.create({
@@ -56,53 +51,49 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: true, eventId: event.id, message: '活動建立成功，目前無匯入名單。' });
     }
 
-    // Bulk prepare texts
-    const textsToEmbed = guests.map((g: any) => 
-      g.name ? `服務：${g.services || '無'}。尋找：${g.lookingFor || '無'}。痛點：${g.painPoints || '無'}` : ''
-    ).filter((t: string) => t !== '');
-
     const validGuests = guests.filter((g: any) => g.name);
-    const embeddings = await getBulkEmbeddings(textsToEmbed);
 
-    let imported = 0;
+    // ─── Phase 1: Write ALL members to DB WITHOUT embeddings first (fast, under 10s) ───
+    const BATCH_SIZE = 8;
+    const memberIds: string[] = [];
 
-    // Write in batches of 5 to avoid exhausting Supabase pgBouncer connections
-    const BATCH_SIZE = 5;
     for (let i = 0; i < validGuests.length; i += BATCH_SIZE) {
       const batch = validGuests.slice(i, i + BATCH_SIZE);
-      await Promise.all(batch.map(async (g: any, batchIdx: number) => {
-        const idx = i + batchIdx;
-        const embeddingStr = embeddings[idx] ? JSON.stringify(embeddings[idx]) : null;
+      const created = await Promise.all(batch.map(async (g: any) => {
         const member = await prisma.memberProfile.create({
           data: {
             organizerId: String(session.id),
             name: g.name, chapter: g.chapter || '貴賓', company: g.company || '無',
             title: g.title || '', industry: g.industry || '未分類', services: g.services || '',
             lookingFor: g.lookingFor || '', painPoints: g.painPoints || '',
-            embedding: embeddingStr
+            embedding: null // will be updated asynchronously
           }
         });
         await prisma.attendance.create({
           data: { eventId: event.id, memberId: member.id, checkinAt: null }
         });
+        return member.id;
       }));
-      imported += batch.length;
+      memberIds.push(...created);
     }
 
-    // 更新 Config (為了保持舊前端程式碼相容)
-    try {
-      const configPath = path.join(process.cwd(), 'src', 'data', 'config.json');
-      fs.writeFileSync(configPath, JSON.stringify({
-        orgName: session.name,
-        eventName: event.name,
-        eventId: event.id,
-        updatedAt: new Date().toISOString()
-      }), 'utf-8');
-    } catch (e) {}
+    // ─── Phase 2: Generate embeddings in background (non-blocking) ───
+    // We use a self-hosted fire-and-forget pattern compatible with Netlify
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+    fetch(`${baseUrl}/api/admin/embed`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ memberIds, guests: validGuests })
+    }).catch(() => {}); // fire and forget
 
-    return NextResponse.json({ success: true, eventId: event.id, message: `成功建立並匯入 ${imported} 位來賓！` });
+    return NextResponse.json({
+      success: true,
+      eventId: event.id,
+      message: `成功匯入 ${memberIds.length} 位來賓！AI 向量化正在背景進行中。`
+    });
   } catch (err) {
     console.error('[Admin API Error]', err);
     return NextResponse.json({ error: '發生錯誤' }, { status: 500 });
   }
 }
+

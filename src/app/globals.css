@@ -215,8 +215,9 @@ body::before {
     border-radius: 12px;
   }
   
-  h1 { font-size: 24px !important; }
-  h2 { font-size: 20px !important; }
+  /* Don't use !important on h1/h2 — it overrides .font-serif class on mobile */
+  h1 { font-size: 24px; }
+  h2 { font-size: 20px; }
   
   .btn-primary, .btn-outline {
     width: 100%;

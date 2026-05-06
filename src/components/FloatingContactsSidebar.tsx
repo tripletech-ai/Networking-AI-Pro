@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -9,66 +9,66 @@ export default function FloatingContactsSidebar({ show }: { show: boolean }) {
   const [contacts, setContacts] = useState<any[]>([]);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [mounted, setMounted] = useState(false);
+  const [removingIds, setRemovingIds] = useState<Set<string>>(new Set());
 
   useEffect(() => { setMounted(true); }, []);
 
   const loadContacts = async () => {
     const user = JSON.parse(localStorage.getItem('ai_current_user') || 'null');
     setCurrentUser(user);
-    if (!user || !user.id) {
-      setContacts([]);
-      return;
-    }
-
+    if (!user || !user.id) { setContacts([]); return; }
     try {
       const res = await fetch(`/api/contacts?memberId=${user.id}`);
       const data = await res.json();
-      if (data.contacts) {
-        setContacts(data.contacts);
-      }
-    } catch (err) {
-      console.error('Failed to load contacts');
-    }
+      if (data.contacts) setContacts(data.contacts);
+    } catch {}
   };
 
   useEffect(() => {
-    if (show) {
-      loadContacts();
-    }
+    if (show) loadContacts();
   }, [show]);
 
   useEffect(() => {
-    loadContacts(); // initial load
-    const openHandler = () => setIsOpen(true);
-    window.addEventListener('contactSaved', loadContacts);
+    loadContacts();
+    const openHandler = () => {
+      // Re-load contacts when sidebar opens to get latest data
+      setIsOpen(true);
+      loadContacts();
+    };
+    const savedHandler = () => loadContacts();
+    window.addEventListener('contactSaved', savedHandler);
     window.addEventListener('openSidebar', openHandler);
     return () => {
-      window.removeEventListener('contactSaved', loadContacts);
+      window.removeEventListener('contactSaved', savedHandler);
       window.removeEventListener('openSidebar', openHandler);
     };
   }, []);
 
   const removeContact = async (id: string) => {
-    if (!currentUser || !currentUser.id) return;
+    if (!currentUser?.id || removingIds.has(id)) return;
+
+    // Optimistic update — remove immediately from UI
+    setRemovingIds(prev => new Set([...prev, id]));
+    setContacts(prev => prev.filter(c => c.id !== id));
+
     try {
-      await fetch(`/api/contacts?connectorId=${currentUser.id}&connectedToId=${id}`, {
-        method: 'DELETE'
-      });
-      setContacts(contacts.filter(c => c.id !== id));
+      await fetch(`/api/contacts?connectorId=${currentUser.id}&connectedToId=${id}`, { method: 'DELETE' });
       window.dispatchEvent(new Event('contactSaved'));
-    } catch (err) {
-      console.error('Failed to remove contact');
+    } catch {
+      // On failure, re-load to restore state
+      loadContacts();
+    } finally {
+      setRemovingIds(prev => { const s = new Set(prev); s.delete(id); return s; });
     }
   };
 
   if (!show || !mounted) return null;
 
-  // Use createPortal to render directly in document.body, bypassing any parent CSS containment
   return createPortal(
     <>
       <div style={{ position: 'fixed', bottom: 24, right: 24, zIndex: 99999 }}>
         <button
-          onClick={() => setIsOpen(true)}
+          onClick={() => { setIsOpen(true); loadContacts(); }}
           style={{
             background: 'linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark))',
             border: 'none',
@@ -89,10 +89,7 @@ export default function FloatingContactsSidebar({ show }: { show: boolean }) {
             <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              style={{
-                position: 'fixed', inset: 0,
-                background: 'rgba(15, 23, 42, 0.3)', backdropFilter: 'blur(4px)', zIndex: 100000,
-              }}
+              style={{ position: 'fixed', inset: 0, background: 'rgba(15, 23, 42, 0.3)', backdropFilter: 'blur(4px)', zIndex: 100000 }}
             />
             <motion.div
               initial={{ x: '100%', opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: '100%', opacity: 0 }}
@@ -128,13 +125,18 @@ export default function FloatingContactsSidebar({ show }: { show: boolean }) {
                     {contacts.map(c => (
                       <div key={c.id} className="glass-card" style={{
                         background: '#ffffff', borderRadius: 14, padding: 20, position: 'relative',
-                        border: '1px solid #e2e8f0'
+                        border: '1px solid #e2e8f0', transition: 'opacity 0.2s',
+                        opacity: removingIds.has(c.id) ? 0.4 : 1
                       }}>
-                        <button onClick={() => removeContact(c.id)} style={{
-                          position: 'absolute', top: 16, right: 16, background: 'none', border: 'none',
-                          color: '#ef4444', cursor: 'pointer', fontSize: 12, fontWeight: 500
-                        }}>
-                          移除
+                        <button
+                          onClick={() => removeContact(c.id)}
+                          disabled={removingIds.has(c.id)}
+                          style={{
+                            position: 'absolute', top: 16, right: 16, background: 'none', border: 'none',
+                            color: '#ef4444', cursor: removingIds.has(c.id) ? 'wait' : 'pointer',
+                            fontSize: 12, fontWeight: 500
+                          }}>
+                          {removingIds.has(c.id) ? '移除中...' : '移除'}
                         </button>
                         <div className="font-serif" style={{ fontSize: 18, fontWeight: 700, color: 'var(--accent-blue)', marginBottom: 4 }}>{c.name}</div>
                         <div style={{ fontSize: 14, color: 'var(--text-secondary)', marginBottom: 12, fontWeight: 500 }}>{c.company} · {c.title}</div>

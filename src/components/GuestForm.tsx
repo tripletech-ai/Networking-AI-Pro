@@ -104,16 +104,16 @@ export default function GuestForm({ onSubmit, error }: Props) {
         {showMagic && (
           <div style={{
             marginTop: 12, padding: 20, borderRadius: 16,
-            background: 'rgba(10, 10, 12, 0.97)',
+            background: '#fffdf9',
             border: '1px solid rgba(197, 168, 128, 0.3)',
-            boxShadow: '0 20px 40px rgba(0,0,0,0.4)'
+            boxShadow: '0 8px 24px rgba(197, 168, 128, 0.1)'
           }}>
-            <div style={{ fontSize: 14, color: '#c5a880', marginBottom: 4, fontWeight: 600 }}>
+            <div style={{ fontSize: 14, color: 'var(--accent-gold-dark)', marginBottom: 4, fontWeight: 700 }}>
               ✦ AI 商務自動建檔
             </div>
-            <div style={{ fontSize: 12, color: '#64748b', marginBottom: 14, lineHeight: 1.5 }}>
+            <div style={{ fontSize: 12, color: '#94a3b8', marginBottom: 14, lineHeight: 1.5 }}>
               用自己的話介紹你的工作，AI 會幫你整理成完整的商務檔案。<br/>
-              <span style={{ color: '#94a3b8' }}>例：「我是王大明，在長輝分會，做外牆防水工程，想認識裝潢建材商，目前客戶太少」</span>
+              <span style={{ color: '#b0a090' }}>例：「我是王大明，在長輝分會，做外牆防水工程，想認識裝潢建材商，目前客戶太少」</span>
             </div>
             <textarea
               value={magicText}
@@ -121,8 +121,8 @@ export default function GuestForm({ onSubmit, error }: Props) {
               placeholder="直接講給 AI 聽，越自然越好..."
               style={{
                 width: '100%', minHeight: 80, padding: '12px 16px',
-                background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
-                borderRadius: 10, color: '#f8fafc', fontSize: 14, resize: 'vertical',
+                background: '#fff', border: '1px solid #e2e8f0',
+                borderRadius: 10, color: 'var(--text-primary)', fontSize: 14, resize: 'vertical',
                 lineHeight: 1.6, boxSizing: 'border-box'
               }}
             />
@@ -138,7 +138,7 @@ export default function GuestForm({ onSubmit, error }: Props) {
                 opacity: !magicText.trim() ? 0.5 : 1, transition: 'all 0.3s'
               }}
             >
-              {magicLoading ? <><Spinner />AI 解析中...</> : magicDone ? '✓ 填表完成！' : '一鍵 AI 自動填表'}
+              {magicLoading ? <><Spinner />AI 解析中...</> : magicDone ? '✓ 一鍵更新資料' : '一鍵 AI 自動填表'}
             </button>
           </div>
         )}
