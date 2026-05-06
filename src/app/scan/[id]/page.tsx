@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { redirect } from 'next/navigation';
-import SaveContactButton from '@/components/SaveContactButton';
+
 
 export default async function DigitalCardPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -85,14 +85,10 @@ export default async function DigitalCardPage({ params }: { params: Promise<{ id
 
         </div>
 
-        <div className="fade-in-up" style={{ animationDelay: '0.2s' }}>
-          <SaveContactButton member={{
-            id: member.id,
-            name: member.name,
-            company: member.company,
-            title: member.title,
-            industry: member.industry
-          }} />
+        <div className="fade-in-up" style={{ animationDelay: '0.2s', textAlign: 'center' }}>
+          <p style={{ fontSize: 13, color: '#94a3b8', lineHeight: 1.6 }}>
+            已掃描完畢 · 此名片僅供本場活動使用
+          </p>
         </div>
 
       </div>

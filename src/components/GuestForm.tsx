@@ -14,20 +14,139 @@ const INDUSTRY_OPTIONS = [
   '資產活化', '命理風水', '其他',
 ];
 
+const Spinner = () => (
+  <span style={{
+    display: 'inline-block', width: 14, height: 14,
+    border: '2px solid rgba(255,255,255,0.35)',
+    borderTopColor: '#fff', borderRadius: '50%',
+    animation: 'spin 0.8s linear infinite', verticalAlign: 'middle', marginRight: 6
+  }} />
+);
+
 export default function GuestForm({ onSubmit, error }: Props) {
   const [form, setForm] = useState<GuestData>({
     name: '', chapter: '', company: '', title: '',
     industry: '', services: '', lookingFor: '', painPoints: '', contactInfo: '',
   });
 
-  const handleWalkinSubmit = () => {
+  // Magic Fill state
+  const [showMagic, setShowMagic] = useState(false);
+  const [magicText, setMagicText] = useState('');
+  const [magicLoading, setMagicLoading] = useState(false);
+  const [magicDone, setMagicDone] = useState(false);
+
+  // Submit loading state
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleMagicFill = async () => {
+    if (!magicText.trim() || magicLoading) return;
+    setMagicLoading(true);
+    try {
+      const res = await fetch('/api/ai/autofill', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: magicText })
+      });
+      const data = await res.json();
+      if (data && !data.error) {
+        setForm(prev => ({
+          ...prev,
+          name: data.name || prev.name,
+          company: data.company || prev.company,
+          title: data.title || prev.title,
+          industry: data.industry || prev.industry,
+          chapter: data.chapter || prev.chapter,
+          services: data.services || prev.services,
+          lookingFor: data.lookingFor || prev.lookingFor,
+          painPoints: data.painPoints || prev.painPoints,
+        }));
+        setMagicDone(true);
+        setTimeout(() => setShowMagic(false), 800);
+      }
+    } catch {}
+    setMagicLoading(false);
+  };
+
+  const handleSubmit = () => {
+    setIsSubmitting(true);
     onSubmit(form);
+    // Reset after 10s in case error occurs
+    setTimeout(() => setIsSubmitting(false), 10000);
   };
 
   const walkinValid = form.name && form.company && form.title && form.industry && form.services && form.lookingFor && form.painPoints;
 
   return (
     <div style={{ position: 'relative', zIndex: 10 }}>
+      <style>{`@keyframes spin { 100% { transform: rotate(360deg); } }`}</style>
+
+      {/* Magic Fill 按鈕 */}
+      <div style={{ marginBottom: 24 }}>
+        <button
+          type="button"
+          onClick={() => setShowMagic(!showMagic)}
+          style={{
+            width: '100%', padding: '14px 20px', borderRadius: 12,
+            background: 'linear-gradient(135deg, rgba(197, 168, 128, 0.15), rgba(197, 168, 128, 0.05))',
+            border: '1px dashed rgba(197, 168, 128, 0.5)',
+            color: '#c5a880', cursor: 'pointer', fontSize: 15, fontWeight: 600,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+            transition: 'all 0.2s'
+          }}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+          </svg>
+          ✨ AI Magic Fill — 一句話自動填表
+        </button>
+
+        {/* Magic Fill 對話框 */}
+        {showMagic && (
+          <div style={{
+            marginTop: 12, padding: 20, borderRadius: 16,
+            background: 'rgba(10, 10, 12, 0.97)',
+            border: '1px solid rgba(197, 168, 128, 0.3)',
+            boxShadow: '0 20px 40px rgba(0,0,0,0.4)'
+          }}>
+            <div style={{ fontSize: 14, color: '#c5a880', marginBottom: 4, fontWeight: 600 }}>
+              ✦ AI 商務自動建檔
+            </div>
+            <div style={{ fontSize: 12, color: '#64748b', marginBottom: 14, lineHeight: 1.5 }}>
+              用自己的話介紹你的工作，AI 會幫你整理成完整的商務檔案。<br/>
+              <span style={{ color: '#94a3b8' }}>例：「我是王大明，在長輝分會，做外牆防水工程，想認識裝潢建材商，目前客戶太少」</span>
+            </div>
+            <textarea
+              value={magicText}
+              onChange={e => setMagicText(e.target.value)}
+              placeholder="直接講給 AI 聽，越自然越好..."
+              style={{
+                width: '100%', minHeight: 80, padding: '12px 16px',
+                background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: 10, color: '#f8fafc', fontSize: 14, resize: 'vertical',
+                lineHeight: 1.6, boxSizing: 'border-box'
+              }}
+            />
+            <button
+              type="button"
+              onClick={handleMagicFill}
+              disabled={magicLoading || !magicText.trim()}
+              style={{
+                marginTop: 12, width: '100%', padding: '12px',
+                background: magicDone ? '#22c55e' : 'var(--accent-gold)',
+                border: 'none', borderRadius: 10, color: '#fff',
+                fontSize: 15, fontWeight: 700, cursor: magicLoading ? 'wait' : 'pointer',
+                opacity: !magicText.trim() ? 0.5 : 1, transition: 'all 0.3s'
+              }}
+            >
+              {magicLoading ? <><Spinner />AI 解析中...</> : magicDone ? '✓ 填表完成！' : '一鍵 AI 自動填表'}
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', margin: '0 0 24px' }} />
+
+      {/* 表單欄位 */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
         {([
           ['name', 'name', '姓名', '王大明', true],
@@ -103,11 +222,11 @@ export default function GuestForm({ onSubmit, error }: Props) {
 
       <button
         className="btn-primary"
-        style={{ width: '100%', marginTop: 36, padding: '16px', fontSize: 16 }}
-        disabled={!walkinValid}
-        onClick={handleWalkinSubmit}
+        style={{ width: '100%', marginTop: 36, padding: '16px', fontSize: 16, opacity: (!walkinValid || isSubmitting) ? 0.7 : 1, transition: 'opacity 0.2s' }}
+        disabled={!walkinValid || isSubmitting}
+        onClick={handleSubmit}
       >
-        儲存資料並啟動高階運算
+        {isSubmitting ? <><Spinner />AI 分析中，請稍候...</> : '儲存資料並啟動高階運算'}
       </button>
     </div>
   );

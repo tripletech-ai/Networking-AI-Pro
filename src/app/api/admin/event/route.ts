@@ -65,29 +65,29 @@ export async function POST(req: NextRequest) {
     const embeddings = await getBulkEmbeddings(textsToEmbed);
 
     let imported = 0;
-    
-    // Create member profiles concurrently using Promise.all or createMany if available
-    // We use Promise.all to get back the IDs for Attendance creation
-    const memberPromises = validGuests.map(async (g: any, idx: number) => {
-      const embeddingStr = embeddings[idx] ? JSON.stringify(embeddings[idx]) : null;
-      const member = await prisma.memberProfile.create({
-        data: {
-          organizerId: String(session.id),
-          name: g.name, chapter: g.chapter || '貴賓', company: g.company || '無',
-          title: g.title || '', industry: g.industry || '未分類', services: g.services || '',
-          lookingFor: g.lookingFor || '', painPoints: g.painPoints || '',
-          embedding: embeddingStr
-        }
-      });
-      
-      await prisma.attendance.create({
-        data: { eventId: event.id, memberId: member.id, checkinAt: null }
-      });
-      return member;
-    });
 
-    await Promise.all(memberPromises);
-    imported = validGuests.length;
+    // Write in batches of 5 to avoid exhausting Supabase pgBouncer connections
+    const BATCH_SIZE = 5;
+    for (let i = 0; i < validGuests.length; i += BATCH_SIZE) {
+      const batch = validGuests.slice(i, i + BATCH_SIZE);
+      await Promise.all(batch.map(async (g: any, batchIdx: number) => {
+        const idx = i + batchIdx;
+        const embeddingStr = embeddings[idx] ? JSON.stringify(embeddings[idx]) : null;
+        const member = await prisma.memberProfile.create({
+          data: {
+            organizerId: String(session.id),
+            name: g.name, chapter: g.chapter || '貴賓', company: g.company || '無',
+            title: g.title || '', industry: g.industry || '未分類', services: g.services || '',
+            lookingFor: g.lookingFor || '', painPoints: g.painPoints || '',
+            embedding: embeddingStr
+          }
+        });
+        await prisma.attendance.create({
+          data: { eventId: event.id, memberId: member.id, checkinAt: null }
+        });
+      }));
+      imported += batch.length;
+    }
 
     // 更新 Config (為了保持舊前端程式碼相容)
     try {

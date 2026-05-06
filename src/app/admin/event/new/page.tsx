@@ -23,6 +23,7 @@ export default function NewEventPage() {
   const [mapping, setMapping] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [progress, setProgress] = useState('');
 
   const parseCSVRaw = (text: string) => {
     const result = [];
@@ -75,8 +76,9 @@ export default function NewEventPage() {
 
     setLoading(true);
     setError('');
+    setProgress('準備向量化來賓資料...');
 
-    const mappedGuests = csvRows.map(row => {
+    const mappedGuests2 = csvRows.map(row => {
       const getVal = (key: string) => mapping[key] !== undefined ? row[mapping[key]] : '';
       return {
         name: getVal('name'),
@@ -90,21 +92,31 @@ export default function NewEventPage() {
       };
     }).filter(g => g.name);
 
+    // Show progress messages in sequence
+    const progressTimer = setTimeout(() => setProgress('AI 批次計算向量中（約5-10秒）...'), 2000);
+    const progressTimer2 = setTimeout(() => setProgress('寫入資料庫中...'), 6000);
+
     try {
       const res = await fetch('/api/admin/event', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ eventName, guests: mappedGuests })
+        body: JSON.stringify({ eventName, guests: mappedGuests2 })
       });
       const data = await res.json();
+      clearTimeout(progressTimer);
+      clearTimeout(progressTimer2);
       if (data.success) {
-        router.push(`/admin`);
-        router.refresh();
+        setProgress(`✓ ${data.message}`);
+        setTimeout(() => { router.push('/admin'); router.refresh(); }, 800);
       } else {
-        setError(data.error);
+        setError(data.error || '發生錯誤');
+        setProgress('');
       }
     } catch {
-      setError('連線失敗');
+      clearTimeout(progressTimer);
+      clearTimeout(progressTimer2);
+      setError('連線失敗，請重試');
+      setProgress('');
     } finally {
       setLoading(false);
     }
@@ -158,6 +170,15 @@ export default function NewEventPage() {
           )}
 
           {error && <div style={{ color: '#f87171', fontSize: 14, margin: '24px 0 0' }}>{error}</div>}
+          {progress && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: progress.startsWith('✓') ? '#22c55e' : '#c5a880', fontSize: 14, margin: '24px 0 0', fontWeight: 500 }}>
+              {!progress.startsWith('✓') && (
+                <span style={{ display: 'inline-block', width: 14, height: 14, border: '2px solid rgba(197, 168, 128, 0.3)', borderTopColor: '#c5a880', borderRadius: '50%', animation: 'spin 1s linear infinite', flexShrink: 0 }} />
+              )}
+              {progress}
+              <style>{`@keyframes spin { 100% { transform: rotate(360deg); } }`}</style>
+            </div>
+          )}
 
           <div style={{ marginTop: 32 }}>
             <button className="btn-primary" onClick={handleSubmit} disabled={loading} style={{ width: '100%', padding: '12px 0', fontSize: 16 }}>
