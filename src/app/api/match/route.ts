@@ -170,6 +170,21 @@ ${guestListText}
     if (!response.ok) return NextResponse.json({ error: `AI 引擎錯誤: ${data?.error?.message}` }, { status: 500 });
     const rawText = data?.choices?.[0]?.message?.content || '';
     const resultObj = JSON.parse(rawText);
+    
+    // Map IDs back to LLM results based on name
+    if (resultObj.matches) {
+      resultObj.matches = resultObj.matches.map((m: any) => {
+        const p = topCandidates.find(c => c.name === m.name) || allProfiles.find((c: any) => c.name === m.name);
+        return { ...m, id: p?.id };
+      });
+    }
+    if (resultObj.grid) {
+      resultObj.grid = resultObj.grid.map((g: any) => {
+        const p = topCandidates.find(c => c.name === g.name) || allProfiles.find((c: any) => c.name === g.name);
+        return { ...g, id: p?.id };
+      });
+    }
+
     resultObj.memberId = returnedMemberId; // Pass back the ID for QR Code
     return NextResponse.json(resultObj);
   } catch (err) {

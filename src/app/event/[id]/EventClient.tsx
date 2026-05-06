@@ -144,7 +144,6 @@ export default function EventClient({ eventName }: { eventName: string }) {
               setAppState('checkin');
               setSearchQuery('');
               setGuestData(null);
-              localStorage.removeItem('ai_saved_contacts');
             }}
             style={{
               background: 'transparent',
@@ -180,10 +179,10 @@ export default function EventClient({ eventName }: { eventName: string }) {
             <div style={{ color: '#c5a880', fontSize: 13, letterSpacing: '4px', fontWeight: 600, marginBottom: 16 }}>
               EXCLUSIVE BUSINESS EVENT
             </div>
-            <h1 style={{ fontSize: 'clamp(32px, 5vw, 48px)', fontWeight: 700, color: '#f8fafc', marginBottom: 24, fontFamily: "'Playfair Display', serif" }}>
+            <h1 style={{ fontSize: 'clamp(32px, 5vw, 48px)', fontWeight: 700, color: 'var(--accent-blue)', marginBottom: 24, fontFamily: "'Playfair Display', serif" }}>
               歡迎來到 {eventName}
             </h1>
-            <p style={{ color: '#94a3b8', fontSize: 18, lineHeight: 1.8, maxWidth: 600, margin: '0 auto 48px', fontWeight: 300 }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: 18, lineHeight: 1.8, maxWidth: 600, margin: '0 auto 48px', fontWeight: 500 }}>
               AI Networking Pro 將為您分析全場來賓的商業資源矩陣，助您精準鎖定高價值合作夥伴。準備好遇見您的下一個跳板了嗎？
             </p>
             <button
@@ -206,10 +205,10 @@ export default function EventClient({ eventName }: { eventName: string }) {
           >
             
             <div style={{ textAlign: 'center', marginBottom: 48 }}>
-              <h1 style={{ fontSize: 32, fontWeight: 700, color: '#f8fafc', marginBottom: 12, fontFamily: "'Playfair Display', serif" }}>
+              <h1 style={{ fontSize: 32, fontWeight: 700, color: 'var(--accent-blue)', marginBottom: 12, fontFamily: "'Playfair Display', serif" }}>
                 AI 智慧報到與配對
               </h1>
-              <p style={{ fontSize: 16, color: '#94a3b8', maxWidth: 600, margin: '0 auto', lineHeight: 1.6 }}>
+              <p style={{ fontSize: 16, color: 'var(--text-secondary)', maxWidth: 600, margin: '0 auto', lineHeight: 1.6, fontWeight: 500 }}>
                 請直接搜尋您的姓名完成一鍵報到。若您為現場臨時參加之貴賓，請於下方表格快速建檔，AI 將為您即時計算商務配對。
               </p>
             </div>
@@ -240,14 +239,14 @@ export default function EventClient({ eventName }: { eventName: string }) {
                     style={{ 
                       padding: '16px 24px', textAlign: 'left', cursor: 'pointer', display: 'flex', 
                       justifyContent: 'space-between', alignItems: 'center', transition: 'background 0.2s',
-                      background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 12
+                      background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, boxShadow: '0 2px 8px rgba(15,23,42,0.04)'
                     }}
-                    onMouseEnter={e => e.currentTarget.style.background = 'rgba(197, 168, 128, 0.1)'}
-                    onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
+                    onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'}
+                    onMouseLeave={e => e.currentTarget.style.background = '#fff'}
                   >
                     <div>
-                      <div style={{ fontSize: 18, fontWeight: 600, color: '#f8fafc', marginBottom: 4 }}>{member.name}</div>
-                      <div style={{ fontSize: 14, color: '#94a3b8' }}>{member.company} · {member.title}</div>
+                      <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--accent-blue)', marginBottom: 4 }}>{member.name}</div>
+                      <div style={{ fontSize: 14, color: 'var(--text-secondary)', fontWeight: 500 }}>{member.company} · {member.title}</div>
                     </div>
                     <div style={{ color: '#c5a880', fontSize: 14, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4 }}>
                       點擊載入檔案 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -266,10 +265,10 @@ export default function EventClient({ eventName }: { eventName: string }) {
 
             {/* 現場候補登記 */}
             <div className="glass-card" style={{ padding: 32 }}>
-              <h2 style={{ fontSize: 18, fontWeight: 600, color: '#f8fafc', marginBottom: 8 }}>
+              <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--accent-blue)', marginBottom: 8 }}>
                 現場空降登記 (首次建檔)
               </h2>
-              <p style={{ fontSize: 14, color: '#94a3b8', marginBottom: 24 }}>
+              <p style={{ fontSize: 14, color: 'var(--text-secondary)', marginBottom: 24, fontWeight: 500 }}>
                 詳細填寫您的商業痛點與資源，送出後 AI 將為您運算並發布至全場名單中。
               </p>
               <GuestForm onSubmit={(data) => handleSubmit({ ...data, isWalkIn: true })} error={error} />
@@ -330,8 +329,8 @@ export default function EventClient({ eventName }: { eventName: string }) {
                 <div style={{ fontSize: 13, color: '#c5a880', marginBottom: 8, fontWeight: 600, letterSpacing: '1px' }}>
                   分析完成
                 </div>
-                <div style={{ fontSize: 24, fontWeight: 700, letterSpacing: '0.5px', fontFamily: "'Playfair Display', serif" }}>
-                  <span style={{ color: '#ffffff' }}>{guestData.name}</span> {guestData.title}
+                <div style={{ fontSize: 24, fontWeight: 800, letterSpacing: '0.5px', fontFamily: "'Playfair Display', serif" }}>
+                  <span style={{ color: 'var(--accent-blue)' }}>{guestData.name}</span> <span style={{fontSize: 16, color: 'var(--text-secondary)'}}>{guestData.title}</span>
                 </div>
                 <div style={{ fontSize: 14, color: '#94a3b8', marginTop: 8 }}>
                   {guestData.chapter && guestData.chapter !== '無' && guestData.chapter !== '未知' ? `${guestData.chapter} · ` : ''}
@@ -357,7 +356,7 @@ export default function EventClient({ eventName }: { eventName: string }) {
             </div>
 
             {/* 頁籤切換 */}
-            <div style={{ display: 'flex', gap: 12, marginBottom: 32, background: 'rgba(0, 0, 0, 0.4)', padding: '6px', borderRadius: 16, border: '1px solid rgba(255,255,255,0.02)' }}>
+            <div style={{ display: 'flex', gap: 12, marginBottom: 32, background: '#fff', padding: '6px', borderRadius: 16, border: '1px solid #e2e8f0', boxShadow: '0 4px 12px rgba(15,23,42,0.04)' }}>
               {[
                 { id: 'grid', label: '戰略九宮格', sub: '全場跨界佈局' },
                 { id: 'match', label: '黃金夥伴', sub: '深度痛點媒合' },
@@ -367,11 +366,10 @@ export default function EventClient({ eventName }: { eventName: string }) {
                   onClick={() => setActiveView(tab.id as 'match' | 'grid')}
                   style={{
                     flex: 1, padding: '16px 20px', textAlign: 'center',
-                    background: activeView === tab.id ? 'rgba(197, 168, 128, 0.1)' : 'transparent',
-                    border: '1px solid',
-                    borderColor: activeView === tab.id ? 'rgba(197, 168, 128, 0.3)' : 'transparent',
+                    background: activeView === tab.id ? 'var(--accent-gold)' : 'transparent',
+                    border: 'none',
                     borderRadius: 12,
-                    color: activeView === tab.id ? '#c5a880' : '#64748b',
+                    color: activeView === tab.id ? '#ffffff' : 'var(--text-secondary)',
                     cursor: 'pointer', transition: 'all 0.3s ease',
                   }}
                 >
@@ -404,13 +402,13 @@ export default function EventClient({ eventName }: { eventName: string }) {
           >
             <div 
               className="glass-card" 
-              style={{ width: 340, padding: 32, textAlign: 'center', border: '1px solid rgba(197,168,128,0.3)', background: '#121316' }}
+              style={{ width: 340, padding: 32, textAlign: 'center', border: '1px solid #e2e8f0', background: '#fff' }}
               onClick={e => e.stopPropagation()}
             >
-              <div style={{ fontSize: 20, fontWeight: 700, color: '#f8fafc', marginBottom: 4 }}>{guestData.name}</div>
-              <div style={{ fontSize: 14, color: '#c5a880', marginBottom: 24 }}>{guestData.company}</div>
+              <div style={{ fontSize: 20, fontWeight: 800, color: 'var(--accent-blue)', marginBottom: 4 }}>{guestData.name}</div>
+              <div style={{ fontSize: 14, color: 'var(--accent-gold-dark)', marginBottom: 24, fontWeight: 600 }}>{guestData.company}</div>
               
-              <div style={{ background: '#fff', padding: 24, borderRadius: 16, display: 'inline-block', marginBottom: 24 }}>
+              <div style={{ background: '#fff', padding: 24, borderRadius: 16, display: 'inline-block', marginBottom: 24, border: '1px solid #f1f5f9' }}>
                 <QRCode value={`${window.location.origin}/scan/${guestData.id}`} size={180} fgColor="#0a0a0c" />
               </div>
 

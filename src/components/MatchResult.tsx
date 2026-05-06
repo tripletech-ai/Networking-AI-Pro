@@ -25,12 +25,12 @@ export default function MatchResult({ matches }: Props) {
 
   return (
     <div>
-      <div style={{ marginBottom: 32, paddingBottom: 16, borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-        <div style={{ fontSize: 13, color: '#c5a880', letterSpacing: '1px', marginBottom: 6, fontWeight: 500 }}>
+      <div style={{ marginBottom: 32, paddingBottom: 16, borderBottom: '1px solid #f1f5f9' }}>
+        <div style={{ fontSize: 13, color: 'var(--accent-gold)', letterSpacing: '1px', marginBottom: 6, fontWeight: 600 }}>
           深度戰略媒合
         </div>
-        <div style={{ fontSize: 20, fontWeight: 600, letterSpacing: '0.5px', color: '#f8fafc' }}>
-          為您推薦的高價值夥伴 <span style={{ color: '#64748b', fontSize: 14, fontWeight: 400, marginLeft: 8 }}>共找到 {matches.length} 位</span>
+        <div className="font-serif" style={{ fontSize: 22, fontWeight: 700, letterSpacing: '0.5px', color: 'var(--accent-blue)' }}>
+          為您推薦的高價值夥伴 <span style={{ color: 'var(--text-secondary)', fontSize: 14, fontWeight: 400, marginLeft: 8 }}>共找到 {matches.length} 位</span>
         </div>
       </div>
 
@@ -46,38 +46,39 @@ export default function MatchResult({ matches }: Props) {
                 borderLeft: `4px solid ${color}`,
                 display: 'flex',
                 flexDirection: 'column',
-                overflow: 'hidden'
+                overflow: 'hidden',
+                background: '#fff'
               }}
             >
               {/* 名片頭部 */}
-              <div style={{ padding: '24px 28px', borderBottom: '1px solid rgba(255,255,255,0.03)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', background: 'rgba(255,255,255,0.01)' }}>
+              <div style={{ padding: '24px 28px', borderBottom: '1px solid #f8fafc', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', background: 'rgba(255,255,255,0.01)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                   <div style={{
                     width: 52, height: 52, borderRadius: '12px',
-                    background: `rgba(255,255,255,0.05)`,
-                    border: `1px solid rgba(255,255,255,0.1)`,
+                    background: `rgba(197, 168, 128, 0.08)`,
+                    border: `1px solid rgba(197, 168, 128, 0.15)`,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 22, fontWeight: 600, color
+                    fontSize: 22, fontWeight: 700, color
                   }}>
                     {match.name.charAt(0)}
                   </div>
                   <div>
-                    <div style={{ fontSize: 19, fontWeight: 600, letterSpacing: '0.5px', marginBottom: 4, color: '#f8fafc' }}>{match.name}</div>
-                    <div style={{ fontSize: 14, color: '#94a3b8' }}>
+                    <div className="font-serif" style={{ fontSize: 20, fontWeight: 700, letterSpacing: '0.5px', marginBottom: 4, color: 'var(--accent-blue)' }}>{match.name}</div>
+                    <div style={{ fontSize: 14, color: 'var(--text-secondary)', fontWeight: 500 }}>
                       {match.title} · {match.company}
                     </div>
                   </div>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8 }}>
                   <span style={{
-                    fontSize: 12, fontWeight: 500, color,
-                    border: `1px solid ${color}40`, padding: '4px 12px', borderRadius: '8px'
+                    fontSize: 12, fontWeight: 700, color,
+                    background: `${color}10`, padding: '4px 12px', borderRadius: '8px', border: `1px solid ${color}30`
                   }}>
                     {match.industry}
                   </span>
                   {match.chapter && match.chapter !== '無' && (
                     <span style={{
-                      fontSize: 11, color: '#64748b', border: '1px solid rgba(255,255,255,0.05)', padding: '2px 10px', borderRadius: '8px'
+                      fontSize: 11, color: 'var(--text-muted)', border: '1px solid #f1f5f9', padding: '2px 10px', borderRadius: '8px', background: '#f8fafc'
                     }}>
                       {match.chapter}
                     </span>
@@ -88,32 +89,32 @@ export default function MatchResult({ matches }: Props) {
               {/* 媒合解析 */}
               <div style={{ padding: '24px 28px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-                  <div style={{ fontSize: 13, color: '#9ca3af', fontWeight: 500, display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                  <div style={{ fontSize: 13, color: 'var(--text-muted)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
                     資深媒合顧問分析
                   </div>
                   <TranslationButton text={match.matchReason} />
                 </div>
-                <div style={{ fontSize: 15, color: '#cbd5e1', lineHeight: 1.8 }}>
+                <div style={{ fontSize: 15, color: 'var(--text-primary)', lineHeight: 1.8, fontWeight: 400 }}>
                   {match.matchReason}
                 </div>
               </div>
 
               {/* 破冰金句 */}
               <div style={{
-                background: `linear-gradient(90deg, rgba(197, 168, 128, 0.05), transparent)`,
-                borderTop: '1px solid rgba(255,255,255,0.02)',
-                padding: '20px 28px',
+                background: `linear-gradient(90deg, rgba(197, 168, 128, 0.04), transparent)`,
+                borderTop: '1px solid #f1f5f9',
+                padding: '24px 28px',
                 display: 'flex',
                 gap: 16,
                 alignItems: 'flex-start',
               }}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" style={{ marginTop: 2, opacity: 0.6 }}><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" style={{ marginTop: 2, opacity: 0.8 }}><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 13, color: color, fontWeight: 500, marginBottom: 8 }}>
+                  <div style={{ fontSize: 13, color: color, fontWeight: 800, marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                     實戰破冰建議
                   </div>
-                  <div style={{ fontSize: 15, color: '#e2e8f0', lineHeight: 1.7, fontWeight: 400 }}>
+                  <div style={{ fontSize: 15, color: 'var(--accent-blue)', lineHeight: 1.7, fontWeight: 500 }}>
                     {match.icebreaker}
                   </div>
                 </div>
@@ -136,10 +137,10 @@ export default function MatchResult({ matches }: Props) {
 
       <div style={{
         marginTop: 32, padding: '24px', borderRadius: '12px',
-        background: 'rgba(197, 168, 128, 0.03)',
+        background: 'rgba(197, 168, 128, 0.04)',
         border: '1px solid rgba(197, 168, 128, 0.1)',
-        fontSize: 14, color: '#94a3b8',
-        textAlign: 'center', lineHeight: 1.8
+        fontSize: 14, color: 'var(--text-secondary)',
+        textAlign: 'center', lineHeight: 1.8, fontWeight: 500
       }}>
         請帶著專屬破冰建議，前往現場與對方交流。<br/>
         您可以點右上角「出示我的名片」讓對方掃描，或切換至「戰略九宮格」查看更多人脈圖譜。

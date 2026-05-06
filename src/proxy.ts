@@ -6,8 +6,7 @@ const SECRET_KEY = new TextEncoder().encode(
   process.env.JWT_SECRET || 'premium-networking-ai-super-secret-key-2026'
 );
 
-export async function middleware(request: NextRequest) {
-  // Protect all /admin routes except /admin/login
+export async function proxy(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith('/admin') && !request.nextUrl.pathname.startsWith('/admin/login')) {
     const token = request.cookies.get('auth-token')?.value;
 

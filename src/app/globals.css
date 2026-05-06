@@ -1,21 +1,24 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+TC:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 @import "tailwindcss";
 
 :root {
-  --bg-primary: #0a0a0c;
-  --bg-secondary: #121316;
+  --bg-primary: #ffffff;
+  --bg-secondary: #fbfbfc;
   
-  /* 深邃高質感的曜石黑與香檳金主題 */
+  /* 精潔優雅的白色、敘事性金與深海藍主題 */
   --accent-gold: #c5a880;
-  --accent-gold-dark: #8c7355;
-  --accent-slate: #334155;
+  --accent-gold-dark: #a68b5b;
+  --accent-gold-light: #dfc9ae;
+  --accent-blue: #0f172a;
+  --accent-navy: #1e293b;
   
-  --glass-bg: rgba(255, 255, 255, 0.02);
-  --glass-border: rgba(197, 168, 128, 0.15); /* 微弱的香檳金邊框 */
-  --glass-hover: rgba(255, 255, 255, 0.04);
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(15, 23, 42, 0.08);
+  --glass-hover: rgba(255, 255, 255, 1);
   
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
 }
 
 * {
@@ -26,92 +29,117 @@
 
 html, body {
   height: 100%;
-  font-family: 'Playfair Display', 'Noto Serif TC', serif;
+  font-family: 'Inter', 'Noto Sans TC', sans-serif;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* 霧面深邃背景光暈 */
+/* 重要資訊使用的襯線體類別 - 加入平滑渲染 */
+.font-serif {
+  font-family: 'Playfair Display', 'Noto Serif TC', serif;
+  font-display: swap;
+}
+
+/* 霧面清潔背景 - 優雅的環境光 */
 body::before {
   content: '';
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
   background: 
-    radial-gradient(ellipse at 50% -20%, rgba(197, 168, 128, 0.08), transparent 60%);
+    radial-gradient(circle at 0% 0%, rgba(197, 168, 128, 0.04) 0%, transparent 50%),
+    radial-gradient(circle at 100% 100%, rgba(15, 23, 42, 0.02) 0%, transparent 50%);
   z-index: 0;
   pointer-events: none;
 }
 
-/* 企業級低調毛玻璃卡片 */
+/* 企業級白色毛玻璃卡片 - 更細膩的投影 */
 .glass-card {
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border-radius: 16px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.01),
+    0 2px 4px -1px rgba(0, 0, 0, 0.01),
+    0 20px 40px -12px rgba(0, 0, 0, 0.05);
 }
 
 .glass-card:hover {
   background: var(--glass-hover);
   border-color: rgba(197, 168, 128, 0.3);
-  transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+  transform: translateY(-4px);
+  box-shadow: 
+    0 10px 15px -3px rgba(0, 0, 0, 0.02),
+    0 30px 60px -12px rgba(15, 23, 42, 0.1);
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #2b2b30, #1f1f22);
-  border: 1px solid var(--accent-gold);
-  color: var(--accent-gold);
-  border-radius: 12px;
-  padding: 14px 28px;
-  font-size: 16px;
-  font-weight: 500;
+  background: var(--accent-blue);
+  border: 1px solid var(--accent-blue);
+  color: #ffffff;
+  border-radius: 100px; /* 更加現代的橢圓圓角 */
+  padding: 14px 32px;
+  font-size: 15px;
+  font-weight: 600;
   letter-spacing: 0.5px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 10px 20px -5px rgba(15, 23, 42, 0.2);
 }
 
 .btn-primary:hover {
-  background: var(--accent-gold);
-  color: #000;
+  background: #1e293b;
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(197, 168, 128, 0.2);
+  box-shadow: 0 15px 30px -5px rgba(15, 23, 42, 0.3);
 }
 
-.btn-primary:disabled {
-  background: #121316;
-  border-color: #333;
-  color: #555;
-  box-shadow: none;
-  cursor: not-allowed;
-  transform: none;
+.btn-gold {
+  background: linear-gradient(135deg, #d4af37 0%, #c5a880 50%, #b08d5b 100%); /* 更真實的金屬感 */
+  border: none;
+  color: #ffffff;
+  border-radius: 100px;
+  padding: 14px 32px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 10px 20px -5px rgba(197, 168, 128, 0.3);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-gold:hover {
+  filter: brightness(1.05);
+  transform: translateY(-2px);
+  box-shadow: 0 15px 30px -5px rgba(197, 168, 128, 0.4);
 }
 
 .btn-outline {
   text-decoration: none;
-  font-size: 16px;
-  padding: 16px 36px;
+  font-size: 15px;
+  padding: 14px 32px;
   border-radius: 100px;
-  background: transparent;
-  border: 1px solid rgba(255,255,255,0.1);
-  color: #f8fafc;
+  background: #ffffff; /* 實心白色更好看 */
+  border: 1px solid #e2e8f0;
+  color: var(--accent-blue);
+  font-weight: 600;
   transition: all 0.3s ease;
   display: inline-block;
 }
 
 .btn-outline:hover {
-  background: rgba(255,255,255,0.05);
+  border-color: var(--accent-gold);
+  color: var(--accent-gold-dark);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
 .btn-danger-text {
   cursor: pointer;
   background: transparent;
   border: none;
-  color: #f87171;
+  color: #ef4444;
   font-size: 14px;
   opacity: 0.8;
   transition: opacity 0.2s;
@@ -123,29 +151,29 @@ body::before {
 
 .input-field {
   width: 100%;
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid #333;
-  padding: 14px 18px;
+  background: #fbfbfc;
+  border: 1px solid #e2e8f0;
+  padding: 14px 20px;
   color: var(--text-primary);
   font-size: 15px;
   font-family: inherit;
-  border-radius: 10px;
-  transition: all 0.2s ease;
+  border-radius: 12px;
+  transition: all 0.25s ease;
 }
 
 .input-field:focus {
   outline: none;
+  background: #ffffff;
   border-color: var(--accent-gold);
-  background: rgba(0, 0, 0, 0.6);
-  box-shadow: 0 0 0 2px rgba(197, 168, 128, 0.1);
+  box-shadow: 0 0 0 4px rgba(197, 168, 128, 0.1);
 }
 
 .input-field::placeholder {
-  color: #555;
+  color: #94a3b8;
 }
 
-.gradient-text {
-  background: linear-gradient(135deg, #fff, var(--accent-gold));
+.gradient-text-gold {
+  background: linear-gradient(135deg, #0f172a 0%, #c5a880 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -207,4 +235,5 @@ body::before {
 
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 10px; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.05); border-radius: 10px; }
+

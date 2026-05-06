@@ -79,20 +79,21 @@ export default function MemberEditModal({ member, eventId, onClose }: Props) {
         className="glass-card"
         style={{
           width: '100%', maxWidth: 520, padding: 32,
-          background: '#121316', border: '1px solid rgba(197,168,128,0.3)',
+          background: '#fff', border: '1px solid #e2e8f0',
           maxHeight: '85vh', overflowY: 'auto',
+          boxShadow: '0 20px 40px rgba(15, 23, 42, 0.08)'
         }}
         onClick={e => e.stopPropagation()}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-          <h3 style={{ fontSize: 18, fontWeight: 600, color: '#f8fafc' }}>編輯成員資料</h3>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: 20 }}>✕</button>
+          <h3 style={{ fontSize: 18, fontWeight: 700, color: 'var(--accent-blue)' }}>編輯成員資料</h3>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: 20 }}>✕</button>
         </div>
 
         <div style={{ display: 'grid', gap: 16 }}>
           {fields.map(f => (
             <div key={f.key}>
-              <label style={{ display: 'block', fontSize: 13, color: '#94a3b8', marginBottom: 6 }}>{f.label}</label>
+              <label style={{ display: 'block', fontSize: 13, color: 'var(--text-secondary)', marginBottom: 6, fontWeight: 600 }}>{f.label}</label>
               {f.key === 'painPoints' || f.key === 'lookingFor' || f.key === 'services' ? (
                 <textarea
                   className="input-field"
@@ -111,15 +112,15 @@ export default function MemberEditModal({ member, eventId, onClose }: Props) {
           ))}
         </div>
 
-        {error && <div style={{ color: '#f87171', fontSize: 13, marginTop: 16 }}>{error}</div>}
+        {error && <div style={{ color: '#ef4444', fontSize: 13, marginTop: 16 }}>{error}</div>}
 
         <div style={{ display: 'flex', gap: 12, marginTop: 24 }}>
           <button
             onClick={onClose}
+            className="btn-outline"
             style={{
               flex: 1, padding: '12px', borderRadius: 8, fontSize: 14,
-              background: 'transparent', border: '1px solid rgba(255,255,255,0.1)',
-              color: '#94a3b8', cursor: 'pointer'
+              cursor: 'pointer'
             }}
           >
             取消

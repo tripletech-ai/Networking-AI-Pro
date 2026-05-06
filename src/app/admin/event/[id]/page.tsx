@@ -43,45 +43,39 @@ export default async function EventDashboardPage({ params }: { params: Promise<{
   }));
 
   return (
-    <div style={{ minHeight: '100vh', padding: '60px 24px', background: 'var(--bg-primary)' }}>
+    <div style={{ minHeight: '100vh', padding: '60px 24px', background: '#f8fafc' }}>
       <div style={{ maxWidth: 1024, margin: '0 auto' }}>
         
-        <Link href="/admin" style={{ color: '#64748b', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 32, fontSize: 14 }}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
-          返回活動列表
+        <Link href="/admin" style={{ color: 'var(--text-secondary)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8, marginBottom: 32, fontSize: 14, fontWeight: 500 }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+          返回儀表板
         </Link>
         
         <header style={{ marginBottom: 40, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <div>
-            <h1 style={{ fontSize: 26, fontWeight: 600, color: '#f8fafc', marginBottom: 8 }}>
+            <h1 className="font-serif" style={{ fontSize: 32, fontWeight: 700, color: 'var(--accent-blue)', marginBottom: 8 }}>
               {event.name}
             </h1>
-            <p style={{ color: '#94a3b8', fontSize: 15, marginBottom: 16 }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: 16, marginBottom: 24, fontWeight: 500 }}>
               共 {members.length} 位嘉賓已準備好進行 AI 媒合
             </p>
             <CopyLinkButton eventId={event.id} />
-            <div style={{ marginTop: 12 }}>
-                <Link href={`/admin/event/${event.id}/dashboard`} style={{
+            <div style={{ marginTop: 20, display: 'flex', gap: 12 }}>
+                <Link href={`/admin/event/${event.id}/dashboard`} className="btn-gold" style={{
                   display: 'inline-flex', alignItems: 'center', gap: 8,
-                  padding: '10px 20px', borderRadius: 10,
-                  background: 'linear-gradient(135deg, rgba(197,168,128,0.15), rgba(197,168,128,0.05))',
-                  border: '1px solid rgba(197,168,128,0.3)',
-                  color: '#c5a880', fontSize: 14, fontWeight: 600, textDecoration: 'none',
-                  transition: 'all 0.2s',
+                  padding: '12px 24px', borderRadius: 100,
+                  fontSize: 14, fontWeight: 700, textDecoration: 'none',
                 }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
                   開啟現場 Live Dashboard
                 </Link>
-                <Link href={`/admin/event/${event.id}/report`} style={{
+                <Link href={`/admin/event/${event.id}/report`} className="btn-outline" style={{
                   display: 'inline-flex', alignItems: 'center', gap: 8,
-                  padding: '10px 20px', borderRadius: 10,
-                  background: 'rgba(255,255,255,0.03)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  color: '#f8fafc', fontSize: 14, fontWeight: 600, textDecoration: 'none',
-                  transition: 'all 0.2s',
+                  padding: '12px 24px', borderRadius: 100,
+                  fontSize: 14, fontWeight: 700, textDecoration: 'none',
                 }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20v-6M6 20V10M18 20V4"/></svg>
-                  商機 ROI 報表
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 20v-6M6 20V10M18 20V4"/></svg>
+                  商機解析報表
                 </Link>
               </div>
           </div>
@@ -93,18 +87,18 @@ export default async function EventDashboardPage({ params }: { params: Promise<{
           <EventStats members={membersForTable} attendances={attendancesForStats} />
         )}
 
-        <div className="glass-card" style={{ padding: 32 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: 16 }}>
-            <h2 style={{ fontSize: 18, fontWeight: 500, color: '#f8fafc' }}>名單管理 (Guest List)</h2>
+        <div className="glass-card" style={{ padding: 40, background: '#fff' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32, borderBottom: '1px solid #f1f5f9', paddingBottom: 20 }}>
+            <h2 className="font-serif" style={{ fontSize: 24, fontWeight: 700, color: 'var(--accent-blue)' }}>嘉賓名單管理</h2>
             <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-              <a href={`/api/admin/event/${event.id}/export`} target="_blank" style={{ color: '#fff', background: 'rgba(34,197,94,0.2)', padding: '6px 14px', borderRadius: 8, fontSize: 13, border: 'none', cursor: 'pointer', transition: 'background 0.2s', textDecoration: 'none' }}>
+              <a href={`/api/admin/event/${event.id}/export`} target="_blank" style={{ color: '#16a34a', background: 'rgba(22, 163, 74, 0.08)', padding: '8px 16px', borderRadius: 8, fontSize: 13, fontWeight: 600, textDecoration: 'none' }}>
                 ↓ 匯出 CSV
               </a>
-              <Link href={`/admin/event/${event.id}/member/new`} style={{ color: '#fff', background: 'rgba(197,168,128,0.2)', padding: '6px 14px', borderRadius: 8, fontSize: 13, textDecoration: 'none', transition: 'background 0.2s' }}>
+              <Link href={`/admin/event/${event.id}/member/new`} className="btn-primary" style={{ padding: '8px 20px', fontSize: 13, textDecoration: 'none' }}>
                 + 單筆新增
               </Link>
-              <Link href={`/admin/event/${event.id}/import`} style={{ color: '#c5a880', fontSize: 14, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}>
-                + 批次匯入
+              <Link href={`/admin/event/${event.id}/import`} style={{ color: 'var(--accent-gold-dark)', fontSize: 13, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6, fontWeight: 700 }}>
+                + 批次匯入來賓
               </Link>
             </div>
           </div>

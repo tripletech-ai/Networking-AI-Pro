@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('admin@networking-ai.com');
+  const [password, setPassword] = useState('admin');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -38,27 +38,27 @@ export default function LoginPage() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-primary)' }}>
-      <div className="glass-card fade-in-up" style={{ width: 400, padding: 40, borderTop: '4px solid #c5a880' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8fafc' }}>
+      <div className="glass-card fade-in-up" style={{ width: 400, padding: 40, borderTop: '4px solid var(--accent-gold)' }}>
         
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
           <div style={{
             width: 48, height: 48, margin: '0 auto 16px', borderRadius: 12,
-            background: 'linear-gradient(135deg, #c5a880, #8c7355)',
-            boxShadow: '0 4px 12px rgba(197, 168, 128, 0.2)'
+            background: 'linear-gradient(135deg, var(--accent-blue), #1e293b)',
+            boxShadow: '0 4px 12px rgba(15, 23, 42, 0.1)'
           }} />
-          <h1 style={{ fontSize: 24, fontWeight: 600, color: '#f8fafc', letterSpacing: '1px' }}>
-            主辦方專屬後台
+          <h1 className="font-serif" style={{ fontSize: 26, fontWeight: 700, color: 'var(--accent-blue)', letterSpacing: '0.5px' }}>
+            主辦方管理中心
           </h1>
-          <p style={{ fontSize: 13, color: '#94a3b8', marginTop: 8 }}>
-            Premium AI Networking System
+          <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 8, letterSpacing: '1px' }}>
+            PREMIUM NETWORKING SYSTEM
           </p>
         </div>
 
         <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
           <div>
-            <label style={{ display: 'block', fontSize: 13, color: '#c5a880', marginBottom: 8, fontWeight: 500 }}>
-              主辦方帳號 (Email)
+            <label style={{ display: 'block', fontSize: 13, color: 'var(--accent-gold-dark)', marginBottom: 8, fontWeight: 600 }}>
+              帳號 (Email)
             </label>
             <input
               type="text"
@@ -70,8 +70,8 @@ export default function LoginPage() {
             />
           </div>
           <div>
-            <label style={{ display: 'block', fontSize: 13, color: '#c5a880', marginBottom: 8, fontWeight: 500 }}>
-              密碼
+            <label style={{ display: 'block', fontSize: 13, color: 'var(--accent-gold-dark)', marginBottom: 8, fontWeight: 600 }}>
+              授權密碼
             </label>
             <input
               type="password"
@@ -83,17 +83,15 @@ export default function LoginPage() {
             />
           </div>
 
-          {error && <div style={{ color: '#f87171', fontSize: 13, textAlign: 'center' }}>{error}</div>}
+          {error && <div style={{ color: '#ef4444', fontSize: 13, textAlign: 'center' }}>{error}</div>}
 
-          <button type="submit" className="btn-primary" style={{ marginTop: 8 }} disabled={loading}>
-            {loading ? '驗證中...' : '登入系統'}
+          <button type="submit" className="btn-primary" style={{ marginTop: 8, padding: '16px' }} disabled={loading}>
+            {loading ? '驗證中...' : '進入後台控制面板'}
           </button>
         </form>
 
-        <div style={{ marginTop: 24, textAlign: 'center', fontSize: 12, color: '#64748b' }}>
-          * 測試用帳號：<br/>
-          admin@networking-ai.com / admin<br/>
-          demo@networking-ai.com / demo
+        <div style={{ marginTop: 32, textAlign: 'center', fontSize: 12, color: 'var(--text-secondary)', background: 'rgba(0,0,0,0.02)', padding: '12px', borderRadius: '8px' }}>
+          測試帳號：admin@networking-ai.com / admin
         </div>
       </div>
     </div>

@@ -97,14 +97,14 @@ export default function NewMemberPage({ params }: { params: Promise<{ id: string
           返回活動管理
         </Link>
         
-        <div className="glass-card" style={{ padding: 40 }}>
-          <h1 style={{ fontSize: 24, fontWeight: 600, color: '#f8fafc', marginBottom: 8 }}>單筆新增來賓</h1>
-          <p style={{ color: '#94a3b8', fontSize: 14, marginBottom: 32 }}>手動為此活動建立一筆來賓檔案。送出後，AI 即可在現場為其進行媒合。</p>
+        <div className="glass-card" style={{ padding: 40, background: '#fff', border: '1px solid #e2e8f0' }}>
+          <h1 style={{ fontSize: 24, fontWeight: 700, color: 'var(--accent-blue)', marginBottom: 8 }}>單筆新增來賓</h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 32, fontWeight: 500 }}>手動為此活動建立一筆來賓檔案。送出後，AI 即可在現場為其進行媒合。</p>
 
           {/* AI Magic Autofill */}
-          <div style={{ background: 'rgba(197, 168, 128, 0.05)', padding: 24, borderRadius: 16, marginBottom: 24, border: '1px solid rgba(197, 168, 128, 0.2)' }}>
+          <div style={{ background: 'var(--bg-secondary)', padding: 24, borderRadius: 16, marginBottom: 24, border: '1px solid #e2e8f0' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-              <div style={{ fontSize: 15, fontWeight: 600, color: '#c5a880', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--accent-gold-dark)', display: 'flex', alignItems: 'center', gap: 8 }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
                 AI Magic Autofill (智慧填表)
               </div>
@@ -114,15 +114,15 @@ export default function NewMemberPage({ params }: { params: Promise<{ id: string
               placeholder="貼上對方的自介文、名片資訊，AI 會自動為您萃取並填入下方 8 個欄位..."
               value={magicText}
               onChange={e => setMagicText(e.target.value)}
-              style={{ minHeight: 80, resize: 'vertical', marginBottom: 12, fontSize: 13 }}
+              style={{ minHeight: 80, resize: 'vertical', marginBottom: 12, fontSize: 13, background: '#fff' }}
             />
             <button 
               type="button" 
               onClick={handleMagicAutofill} 
               disabled={isMagicLoading || !magicText.trim()}
               style={{
-                background: 'linear-gradient(135deg, #c5a880, #8c7355)',
-                border: 'none', borderRadius: 8, padding: '10px 20px', color: '#fff', fontSize: 14, fontWeight: 600,
+                background: 'linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark))',
+                border: 'none', borderRadius: 8, padding: '10px 20px', color: '#fff', fontSize: 14, fontWeight: 700,
                 cursor: (isMagicLoading || !magicText.trim()) ? 'not-allowed' : 'pointer',
                 opacity: (isMagicLoading || !magicText.trim()) ? 0.5 : 1
               }}
@@ -135,25 +135,26 @@ export default function NewMemberPage({ params }: { params: Promise<{ id: string
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
               {fields.slice(0, 5).map(f => (
                 <div key={f.key}>
-                  <label style={{ display: 'block', fontSize: 13, color: '#94a3b8', marginBottom: 6 }}>{f.label}</label>
+                  <label style={{ display: 'block', fontSize: 13, color: 'var(--text-secondary)', marginBottom: 6, fontWeight: 600 }}>{f.label}</label>
                   <input
                     className="input-field"
                     value={(form as any)[f.key]}
                     required={f.key === 'name'}
                     onChange={e => setForm({ ...form, [f.key]: e.target.value })}
+                    style={{ background: '#fbfbfc' }}
                   />
                 </div>
               ))}
             </div>
             
-            <div style={{ height: 1, background: 'rgba(255,255,255,0.05)', margin: '8px 0' }} />
+            <div style={{ height: 1, background: '#e2e8f0', margin: '8px 0' }} />
 
             {fields.slice(5).map(f => (
               <div key={f.key}>
-                <label style={{ display: 'block', fontSize: 13, color: '#94a3b8', marginBottom: 6 }}>{f.label}</label>
+                <label style={{ display: 'block', fontSize: 13, color: 'var(--text-secondary)', marginBottom: 6, fontWeight: 600 }}>{f.label}</label>
                 <textarea
                   className="input-field"
-                  style={{ minHeight: 80, resize: 'vertical' }}
+                  style={{ minHeight: 80, resize: 'vertical', background: '#fbfbfc' }}
                   value={(form as any)[f.key]}
                   onChange={e => setForm({ ...form, [f.key]: e.target.value })}
                   placeholder={`描述對方的${f.label}...`}

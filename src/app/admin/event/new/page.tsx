@@ -118,23 +118,23 @@ export default function NewEventPage() {
           返回儀表板
         </Link>
 
-        <h1 style={{ fontSize: 24, fontWeight: 600, color: '#f8fafc', marginBottom: 24 }}>新增活動與匯入名單</h1>
+        <h1 style={{ fontSize: 24, fontWeight: 700, color: 'var(--accent-blue)', marginBottom: 24 }}>新增活動與匯入名單</h1>
         
-        <div className="glass-card" style={{ padding: 32 }}>
+        <div className="glass-card" style={{ padding: 32, background: '#fff', border: '1px solid #e2e8f0' }}>
           <div style={{ marginBottom: 24 }}>
-            <label style={{ display: 'block', fontSize: 14, color: '#c5a880', marginBottom: 8, fontWeight: 500 }}>活動名稱</label>
+            <label style={{ display: 'block', fontSize: 14, color: 'var(--text-secondary)', marginBottom: 8, fontWeight: 600 }}>活動名稱</label>
             <input type="text" className="input-field" placeholder="例如：4月產業交流會" value={eventName} onChange={e => setEventName(e.target.value)} />
           </div>
 
           <div style={{ marginBottom: 24 }}>
-            <label style={{ display: 'block', fontSize: 14, color: '#c5a880', marginBottom: 8, fontWeight: 500 }}>上傳報名名單 (CSV 格式)</label>
-            <input type="file" accept=".csv" onChange={handleFileUpload} style={{ color: '#94a3b8', fontSize: 14 }} />
+            <label style={{ display: 'block', fontSize: 14, color: 'var(--text-secondary)', marginBottom: 8, fontWeight: 600 }}>上傳報名名單 (CSV 格式)</label>
+            <input type="file" accept=".csv" onChange={handleFileUpload} style={{ color: 'var(--text-secondary)', fontSize: 14 }} />
             <p style={{ fontSize: 12, color: '#64748b', marginTop: 8 }}>支援所有表單系統之匯出檔，上傳後可手動進行欄位配對。</p>
           </div>
 
           {csvHeaders.length > 0 && (
-            <div style={{ marginTop: 32, padding: 24, background: 'rgba(255,255,255,0.02)', borderRadius: 12, border: '1px solid rgba(255,255,255,0.05)' }}>
-              <h3 style={{ fontSize: 16, color: '#f8fafc', marginBottom: 16 }}>欄位智能對應 (Smart Column Mapping)</h3>
+            <div style={{ marginTop: 32, padding: 24, background: '#f8fafc', borderRadius: 12, border: '1px solid #e2e8f0' }}>
+              <h3 style={{ fontSize: 16, color: 'var(--accent-blue)', marginBottom: 16, fontWeight: 600 }}>欄位智能對應 (Smart Column Mapping)</h3>
               <p style={{ fontSize: 13, color: '#94a3b8', marginBottom: 24 }}>請將左側系統所需欄位，對應至您上傳表單的實際欄位：</p>
               
               <div style={{ display: 'grid', gap: 16 }}>

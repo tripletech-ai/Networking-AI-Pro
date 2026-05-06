@@ -53,14 +53,25 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     // 實際統計數據：透過參與成員反向查詢連結與訊息
     const memberIds = members.map((m: any) => m.id);
     
-    const totalConnections = await prisma.connection.count({
-      where: {
-        OR: [
-          { connectorId: { in: memberIds } },
-          { connectedToId: { in: memberIds } }
-        ]
-      }
-    }).catch(() => 0);
+    // 計算每個人的被連結次數 (記住這名聯絡人)
+    const connections = await prisma.connection.findMany({
+      where: { connectedToId: { in: memberIds } },
+      select: { connectedToId: true }
+    }).catch(() => []);
+
+    const connectionCounts: Record<string, number> = {};
+    connections.forEach((c) => {
+      connectionCounts[c.connectedToId] = (connectionCounts[c.connectedToId] || 0) + 1;
+    });
+
+    const membersWithConnections = members.map((m: any) => ({
+      ...m,
+      connectionsCount: connectionCounts[m.id] || 0
+    }));
+
+    const topConnectedMembers = [...membersWithConnections].sort((a, b) => b.connectionsCount - a.connectionsCount);
+
+    const totalConnections = connections.length; // 或包含雙向連結的總數
 
     const totalMessages = await prisma.message.count({
       where: {
@@ -75,6 +86,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
       industryMap,
       chapterMap,
       recentCheckins,
+      topConnectedMembers: topConnectedMembers.slice(0, 10), // 提供給報表
       stats: {
         totalCheckins: members.length,
         totalConnections,

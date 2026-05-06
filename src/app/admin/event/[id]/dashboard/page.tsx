@@ -44,17 +44,17 @@ export default function LiveDashboardPage() {
 
   if (loading) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0a0a0c' }}>
-        <div style={{ color: '#c5a880', fontSize: 18 }}>載入中...</div>
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8fafc' }}>
+        <div style={{ color: 'var(--accent-gold-dark)', fontSize: 18, fontWeight: 600 }}>載入中...</div>
       </div>
     );
   }
 
   if (error || !data) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0a0a0c', flexDirection: 'column', gap: 16 }}>
-        <div style={{ color: '#f87171', fontSize: 18 }}>{error || '無法載入'}</div>
-        <button onClick={() => router.push('/admin')} style={{ color: '#c5a880', background: 'none', border: '1px solid rgba(197,168,128,0.3)', padding: '8px 24px', borderRadius: 8, cursor: 'pointer' }}>
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8fafc', flexDirection: 'column', gap: 16 }}>
+        <div style={{ color: '#ef4444', fontSize: 18, fontWeight: 600 }}>{error || '無法載入'}</div>
+        <button onClick={() => router.push('/admin')} className="btn-outline" style={{ padding: '8px 24px', borderRadius: 8, cursor: 'pointer' }}>
           返回後台
         </button>
       </div>
@@ -86,32 +86,33 @@ export default function LiveDashboardPage() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0a0a0c', padding: '32px', color: '#f8fafc' }}>
+    <div style={{ minHeight: '100vh', background: '#f8fafc', padding: '32px', color: 'var(--text-primary)' }}>
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
         <div>
-          <div style={{ fontSize: 13, color: '#c5a880', letterSpacing: 3, fontWeight: 600, marginBottom: 8 }}>LIVE DASHBOARD</div>
-          <h1 style={{ fontSize: 28, fontWeight: 700, fontFamily: "'Playfair Display', serif" }}>{data.eventName}</h1>
+          <div style={{ fontSize: 13, color: 'var(--accent-gold)', letterSpacing: 4, fontWeight: 700, marginBottom: 8, textTransform: 'uppercase' }}>THE REAL-TIME ANALYTICS</div>
+          <h1 className="font-serif" style={{ fontSize: 32, fontWeight: 800, color: 'var(--accent-blue)' }}>{data.eventName}</h1>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <div style={{
             display: 'flex', alignItems: 'center', gap: 8,
-            padding: '8px 16px', borderRadius: 20,
-            background: data.isActive ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)',
-            border: `1px solid ${data.isActive ? 'rgba(34, 197, 94, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`,
+            padding: '8px 20px', borderRadius: 100,
+            background: data.isActive ? 'rgba(22, 163, 74, 0.08)' : 'rgba(239, 68, 68, 0.08)',
+            border: `1px solid ${data.isActive ? 'rgba(22, 163, 74, 0.2)' : 'rgba(239, 68, 68, 0.2)'}`,
           }}>
             <div style={{
               width: 8, height: 8, borderRadius: '50%',
-              background: data.isActive ? '#22c55e' : '#ef4444',
+              background: data.isActive ? '#16a34a' : '#ef4444',
               animation: data.isActive ? 'pulse 2s infinite' : 'none',
             }} />
-            <span style={{ fontSize: 13, color: data.isActive ? '#22c55e' : '#ef4444' }}>
+            <span style={{ fontSize: 13, fontWeight: 700, color: data.isActive ? '#16a34a' : '#ef4444' }}>
               {data.isActive ? '活動進行中' : '活動已暫停'}
             </span>
           </div>
           <button
             onClick={() => router.push(`/admin/event/${eventId}`)}
-            style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#94a3b8', padding: '8px 16px', borderRadius: 8, cursor: 'pointer', fontSize: 13 }}
+            className="btn-outline"
+            style={{ padding: '8px 20px', fontSize: 13, borderRadius: 100 }}
           >
             返回管理
           </button>
@@ -120,32 +121,34 @@ export default function LiveDashboardPage() {
 
       <style>{`
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
       `}</style>
 
       {/* 主要數字看板 */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20, marginBottom: 32 }}>
-        <div style={{
-          padding: 24, borderRadius: 16, background: 'linear-gradient(135deg, rgba(197,168,128,0.1), rgba(197,168,128,0.02))',
-          border: '1px solid rgba(197,168,128,0.2)'
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 24, marginBottom: 32 }}>
+        <div className="glass-card" style={{
+          padding: 32, background: 'linear-gradient(135deg, #fff, var(--bg-secondary))',
+          border: '1px solid #e2e8f0', boxShadow: '0 10px 30px rgba(15, 23, 42, 0.04)'
         }}>
-          <div style={{ fontSize: 12, color: '#c5a880', fontWeight: 500, letterSpacing: 1, marginBottom: 8 }}>總報到人數</div>
-          <div style={{ fontSize: 48, fontWeight: 700, color: '#c5a880', fontFamily: "'Playfair Display', serif" }}>{data.totalMembers}</div>
+          <div style={{ fontSize: 13, color: 'var(--accent-gold-dark)', fontWeight: 700, letterSpacing: 1, marginBottom: 12 }}>總報到人數</div>
+          <div className="font-serif" style={{ fontSize: 56, fontWeight: 800, color: 'var(--accent-blue)', lineHeight: 1 }}>{data.totalMembers}</div>
         </div>
-        <div style={{ padding: 24, borderRadius: 16, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
-          <div style={{ fontSize: 12, color: '#94a3b8', fontWeight: 500, letterSpacing: 1, marginBottom: 8 }}>涵蓋產業數</div>
-          <div style={{ fontSize: 48, fontWeight: 700, color: '#f8fafc', fontFamily: "'Playfair Display', serif" }}>{sortedIndustries.length}</div>
+        <div className="glass-card" style={{ padding: 32, background: '#fff', border: '1px solid #e2e8f0' }}>
+          <div style={{ fontSize: 13, color: 'var(--text-secondary)', fontWeight: 700, letterSpacing: 1, marginBottom: 12 }}>涵蓋產業數</div>
+          <div className="font-serif" style={{ fontSize: 56, fontWeight: 800, color: 'var(--accent-blue)', lineHeight: 1 }}>{sortedIndustries.length}</div>
         </div>
-        <div style={{ padding: 24, borderRadius: 16, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
-          <div style={{ fontSize: 12, color: '#94a3b8', fontWeight: 500, letterSpacing: 1, marginBottom: 8 }}>分會數量</div>
-          <div style={{ fontSize: 48, fontWeight: 700, color: '#f8fafc', fontFamily: "'Playfair Display', serif" }}>{sortedChapters.length}</div>
+        <div className="glass-card" style={{ padding: 32, background: '#fff', border: '1px solid #e2e8f0' }}>
+          <div style={{ fontSize: 13, color: 'var(--text-secondary)', fontWeight: 700, letterSpacing: 1, marginBottom: 12 }}>分會數量</div>
+          <div className="font-serif" style={{ fontSize: 56, fontWeight: 800, color: 'var(--accent-blue)', lineHeight: 1 }}>{sortedChapters.length}</div>
         </div>
-        <div style={{ padding: 24, borderRadius: 16, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
-          <div style={{ fontSize: 12, color: '#94a3b8', fontWeight: 500, letterSpacing: 1, marginBottom: 8 }}>最後更新</div>
-          <div style={{ fontSize: 16, fontWeight: 500, color: '#64748b', marginTop: 8 }}>
-            {new Date(data.updatedAt).toLocaleTimeString('zh-TW')}
+        <div className="glass-card" style={{ padding: 32, background: '#fff', border: '1px solid #e2e8f0' }}>
+          <div style={{ fontSize: 13, color: 'var(--text-secondary)', fontWeight: 700, letterSpacing: 1, marginBottom: 12 }}>系統狀態</div>
+          <div className="font-serif" style={{ fontSize: 18, fontWeight: 700, color: 'var(--accent-gold)', marginTop: 8 }}>
+            即時同步中
           </div>
-          <div style={{ fontSize: 11, color: '#475569', marginTop: 4 }}>每 8 秒自動刷新</div>
+          <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 8, fontWeight: 500 }}>
+            最後更新: {new Date(data.updatedAt).toLocaleTimeString('zh-TW')}
+          </div>
         </div>
       </div>
 
@@ -153,21 +156,27 @@ export default function LiveDashboardPage() {
         {/* 左側大區塊 */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
           {/* 產業分布 bar chart -> pie chart */}
-          <div style={{ padding: 24, borderRadius: 16, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
-            <h3 style={{ fontSize: 16, fontWeight: 600, color: '#c5a880', marginBottom: 20 }}>
-              產業分布
+          <div className="glass-card" style={{ padding: 40, background: '#fff' }}>
+            <h3 className="font-serif" style={{ fontSize: 22, fontWeight: 700, color: 'var(--accent-blue)', marginBottom: 32 }}>
+              產業組成比例圖
             </h3>
-            <div style={{ display: 'flex', gap: 32, alignItems: 'center', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: 60, alignItems: 'center', flexWrap: 'wrap' }}>
               <div style={{ 
-                width: 160, height: 160, borderRadius: '50%', 
+                width: 220, height: 220, borderRadius: '50%', 
                 background: `conic-gradient(${generateConicGradient()})`,
-                boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
-              }} />
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                boxShadow: '0 8px 32px rgba(15, 23, 42, 0.08)',
+                position: 'relative'
+              }}>
+                <div style={{ position: 'absolute', inset: 30, background: '#fff', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: 'var(--text-secondary)' }}>
+                  INDUSTRY
+                </div>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px 32px', flex: 1 }}>
                 {sortedIndustries.map(([ind, count], idx) => (
-                  <div key={ind} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <div style={{ width: 12, height: 12, borderRadius: '50%', background: PIE_COLORS[idx % PIE_COLORS.length] }} />
-                    <span style={{ fontSize: 13, color: '#e2e8f0' }}>{ind} <span style={{ color: '#94a3b8' }}>({count})</span></span>
+                  <div key={ind} style={{ display: 'flex', alignItems: 'center', gap: 12, paddingBottom: 12, borderBottom: '1px solid #f8fafc' }}>
+                    <div style={{ width: 14, height: 14, borderRadius: 4, background: PIE_COLORS[idx % PIE_COLORS.length] }} />
+                    <span style={{ fontSize: 14, color: 'var(--text-primary)', fontWeight: 600 }}>{ind}</span>
+                    <span style={{ fontSize: 14, color: 'var(--accent-gold-dark)', fontWeight: 800, marginLeft: 'auto' }}>{count}</span>
                   </div>
                 ))}
               </div>
@@ -178,63 +187,44 @@ export default function LiveDashboardPage() {
         {/* 右側 */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
           {/* 最新報到 Live Feed */}
-          <div style={{ padding: 24, borderRadius: 16, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
-            <h3 style={{ fontSize: 16, fontWeight: 600, color: '#c5a880', marginBottom: 20 }}>
-              最新報到
+          <div className="glass-card" style={{ padding: 32, background: '#fff', display: 'flex', flexDirection: 'column' }}>
+            <h3 className="font-serif" style={{ fontSize: 20, fontWeight: 700, color: 'var(--accent-blue)', marginBottom: 24 }}>
+              最新報到嘉賓
             </h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, maxHeight: 400, overflowY: 'auto' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16, maxHeight: 500, overflowY: 'auto', paddingRight: 8 }}>
               {data.recentCheckins.map((p, i) => (
                 <div key={p.id} style={{
-                  display: 'flex', alignItems: 'center', gap: 12,
-                  padding: '12px', borderRadius: 10,
-                  background: i === 0 ? 'rgba(197,168,128,0.06)' : 'transparent',
-                  border: i === 0 ? '1px solid rgba(197,168,128,0.15)' : '1px solid transparent',
+                  display: 'flex', alignItems: 'center', gap: 14,
+                  padding: '16px', borderRadius: 12,
+                  background: i === 0 ? 'var(--bg-secondary)' : '#fff',
+                  border: i === 0 ? '1px solid var(--accent-gold-light)' : '1px solid #f1f5f9',
                   animation: i === 0 ? 'slideIn 0.5s ease' : 'none',
+                  boxShadow: i === 0 ? '0 4px 12px rgba(197, 168, 128, 0.1)' : 'none'
                 }}>
                   <div style={{
-                    width: 36, height: 36, borderRadius: 8,
-                    background: 'rgba(197,168,128,0.1)', border: '1px solid rgba(197,168,128,0.2)',
+                    width: 44, height: 44, borderRadius: 12,
+                    background: 'var(--accent-blue)', 
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 14, fontWeight: 700, color: '#c5a880', flexShrink: 0,
+                    fontSize: 18, fontWeight: 800, color: '#fff', flexShrink: 0,
                   }}>
                     {p.name.charAt(0)}
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: '#f8fafc', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.name}</div>
-                    <div style={{ fontSize: 12, color: '#64748b', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.company}</div>
+                    <div className="font-serif" style={{ fontSize: 16, fontWeight: 700, color: 'var(--accent-blue)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.name}</div>
+                    <div style={{ fontSize: 13, color: 'var(--text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginTop: 2 }}>{p.company}</div>
                   </div>
                   <div style={{
-                    fontSize: 10, color: '#c5a880', padding: '4px 8px', borderRadius: 4,
-                    background: 'rgba(197,168,128,0.1)', whiteSpace: 'nowrap'
+                    fontSize: 11, color: 'var(--accent-gold-dark)', fontWeight: 700, background: 'rgba(197,168,128,0.1)', padding: '6px 10px', borderRadius: 8
                   }}>
-                    {new Date(p.checkinTime).toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' })} 報到
+                    {new Date(p.checkinTime).toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' })}
                   </div>
                 </div>
               ))}
               {data.recentCheckins.length === 0 && (
-                <div style={{ textAlign: 'center', color: '#64748b', fontSize: 13, padding: 20 }}>
+                <div style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: 14, padding: 40 }}>
                   尚無報到紀錄
                 </div>
               )}
-            </div>
-          </div>
-
-          {/* 分會來源 */}
-          <div style={{ padding: 24, borderRadius: 16, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
-            <h3 style={{ fontSize: 16, fontWeight: 600, color: '#c5a880', marginBottom: 20 }}>
-              分會來源
-            </h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxHeight: 400, overflowY: 'auto', paddingRight: 8 }}>
-              {sortedChapters.map(([ch, count]) => (
-                <div key={ch} style={{
-                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                  padding: '10px 14px', borderRadius: 8,
-                  background: 'rgba(255,255,255,0.02)',
-                }}>
-                  <span style={{ fontSize: 14, color: '#cbd5e1' }}>{ch}</span>
-                  <span style={{ fontSize: 16, fontWeight: 700, color: '#c5a880' }}>{count}</span>
-                </div>
-              ))}
             </div>
           </div>
         </div>

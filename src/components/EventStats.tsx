@@ -39,8 +39,8 @@ export default function EventStats({ members, attendances }: Props) {
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, marginBottom: 32 }}>
 
       {/* 產業分布圓餅圖 */}
-      <div className="glass-card" style={{ padding: 24 }}>
-        <h3 style={{ fontSize: 15, fontWeight: 600, color: '#c5a880', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
+      <div className="glass-card" style={{ padding: 32, background: '#fff' }}>
+        <h3 className="font-serif" style={{ fontSize: 18, fontWeight: 700, color: 'var(--accent-blue)', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
           產業分布
         </h3>
         <div style={{ display: 'flex', gap: 24, alignItems: 'center', flexWrap: 'wrap' }}>
@@ -52,8 +52,8 @@ export default function EventStats({ members, attendances }: Props) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {sortedIndustries.map(([ind, count], idx) => (
               <div key={ind} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <div style={{ width: 10, height: 10, borderRadius: '50%', background: PIE_COLORS[idx % PIE_COLORS.length] }} />
-                <span style={{ fontSize: 13, color: '#e2e8f0' }}>{ind} <span style={{ color: '#94a3b8' }}>({count})</span></span>
+                <div style={{ width: 12, height: 12, borderRadius: '4px', background: PIE_COLORS[idx % PIE_COLORS.length] }} />
+                <span style={{ fontSize: 14, color: 'var(--text-primary)', fontWeight: 600 }}>{ind} <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>({count})</span></span>
               </div>
             ))}
           </div>
@@ -61,19 +61,19 @@ export default function EventStats({ members, attendances }: Props) {
       </div>
 
       {/* 分會來源統計 */}
-      <div className="glass-card" style={{ padding: 24 }}>
-        <h3 style={{ fontSize: 15, fontWeight: 600, color: '#c5a880', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+      <div className="glass-card" style={{ padding: 32, background: '#fff' }}>
+        <h3 className="font-serif" style={{ fontSize: 18, fontWeight: 700, color: 'var(--accent-blue)', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
           分會來源分析
         </h3>
         <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', maxHeight: 300, overflowY: 'auto' }}>
           {sortedChapters.map(([ch, count]) => (
             <div key={ch} style={{
               padding: '10px 18px', borderRadius: 8,
-              background: 'rgba(197, 168, 128, 0.08)', border: '1px solid rgba(197, 168, 128, 0.15)',
+              background: '#f8fafc', border: '1px solid #f1f5f9',
               display: 'flex', alignItems: 'center', gap: 10
             }}>
-              <span style={{ fontSize: 14, color: '#cbd5e1' }}>{ch}</span>
-              <span style={{ fontSize: 18, fontWeight: 700, color: '#c5a880' }}>{count}</span>
+              <span style={{ fontSize: 14, color: 'var(--text-secondary)', fontWeight: 600 }}>{ch}</span>
+              <span style={{ fontSize: 18, fontWeight: 800, color: 'var(--accent-gold-dark)' }}>{count}</span>
             </div>
           ))}
         </div>
