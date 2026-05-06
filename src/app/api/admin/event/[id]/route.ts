@@ -9,7 +9,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
 
   try {
     // 1. 先確認權限與找出此活動的所有 attendance memberId
-    const event = await prisma.event.findFirst({ where: { id, organizerId: organizer.id } });
+    const event = await prisma.event.findFirst({ where: { id, organizerId: String(organizer.id) } });
     if (!event) return NextResponse.json({ error: '無權限或找不到活動' }, { status: 403 });
 
     const attendances = await prisma.attendance.findMany({
@@ -55,7 +55,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 
   try {
     await prisma.event.updateMany({
-      where: { id, organizerId: organizer.id },
+      where: { id, organizerId: String(organizer.id) },
       data: { isActive }
     });
     return NextResponse.json({ success: true });

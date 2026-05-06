@@ -13,7 +13,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
     const member = await prisma.memberProfile.create({
       data: {
-        organizerId: organizer.id,
+        organizerId: String(organizer.id),
         name: data.name,
         company: data.company || '',
         title: data.title || '',
