@@ -2,6 +2,7 @@ import { getSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
+import NavBackButton from '@/components/NavBackButton';
 import CopyLinkButton from '@/components/CopyLinkButton';
 import EventControls from '@/components/EventControls';
 import MemberTable from '@/components/MemberTable';
@@ -46,10 +47,12 @@ export default async function EventDashboardPage({ params }: { params: Promise<{
     <div style={{ minHeight: '100vh', padding: '60px 24px', background: '#f8fafc' }}>
       <div style={{ maxWidth: 1024, margin: '0 auto' }}>
         
-        <Link href="/admin" style={{ color: 'var(--text-secondary)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8, marginBottom: 32, fontSize: 14, fontWeight: 500 }}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
-          返回儀表板
-        </Link>
+        <NavBackButton
+          href="/admin"
+          label="返回儀表板"
+          className=""
+          style={{ color: 'var(--text-secondary)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8, marginBottom: 32, fontSize: 14, fontWeight: 500, background: 'none', border: 'none', padding: 0 }}
+        />
         
         <header style={{ marginBottom: 40, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <div>

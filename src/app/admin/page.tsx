@@ -59,7 +59,7 @@ export default async function AdminDashboard() {
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 24 }}>
             {events.map((event: any) => (
-              <Link key={event.id} href={`/admin/event/${event.id}`} style={{ textDecoration: 'none' }}>
+              <Link prefetch={true} key={event.id} href={`/admin/event/${event.id}`} style={{ textDecoration: 'none' }}>
                 <div 
                   className="glass-card fade-in-up" 
                   style={{ padding: 32, cursor: 'pointer', height: '100%', display: 'flex', flexDirection: 'column', background: '#fff', border: '1px solid #e2e8f0', transition: 'all 0.3s ease' }}

@@ -2,7 +2,7 @@
 
 import { useState, use } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import NavBackButton from '@/components/NavBackButton';
 
 export default function NewMemberPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -91,12 +91,12 @@ export default function NewMemberPage({ params }: { params: Promise<{ id: string
   return (
     <div style={{ minHeight: '100vh', padding: '60px 24px', background: 'var(--bg-primary)' }}>
       <div style={{ maxWidth: 640, margin: '0 auto' }}>
-        
-        <Link href={`/admin/event/${id}`} style={{ color: '#64748b', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6, marginBottom: 32, fontSize: 14 }}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
-          返回活動管理
-        </Link>
-        
+        <NavBackButton
+          href={`/admin/event/${id}`}
+          label="返回活動管理"
+          className=""
+          style={{ color: '#64748b', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6, marginBottom: 32, fontSize: 14, background: 'none', border: 'none', padding: 0 }}
+        />
         <div className="glass-card" style={{ padding: 40, background: '#fff', border: '1px solid #e2e8f0' }}>
           <h1 style={{ fontSize: 24, fontWeight: 700, color: 'var(--accent-blue)', marginBottom: 8 }}>單筆新增來賓</h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 32, fontWeight: 500 }}>手動為此活動建立一筆來賓檔案。送出後，AI 即可在現場為其進行媒合。</p>

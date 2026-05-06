@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
+import NavBackButton from '@/components/NavBackButton';
 
 export default function ROIReportPage() {
   const params = useParams();
@@ -24,14 +25,25 @@ export default function ROIReportPage() {
     return () => clearInterval(interval);
   }, [eventId]);
 
-  if (loading) return <div style={{ padding: 40, color: 'var(--accent-gold-dark)', fontWeight: 600, textAlign: 'center' }}>分析商機數據中...</div>;
+  if (loading) return (
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16 }}>
+      <div style={{ position: 'relative', width: 52, height: 52 }}>
+        <div style={{ position: 'absolute', inset: 0, border: '3px solid #f1f5f9', borderRadius: '50%' }}/>
+        <div style={{ position: 'absolute', inset: 0, border: '3px solid transparent', borderTopColor: 'var(--accent-gold)', borderRadius: '50%', animation: 'spin 0.9s linear infinite' }}/>
+      </div>
+      <style>{`@keyframes spin{100%{transform:rotate(360deg)}}`}</style>
+      <div style={{ color: 'var(--accent-gold-dark)', fontWeight: 600 }}>分析商機數據中...</div>
+    </div>
+  );
 
   return (
     <div style={{ maxWidth: 1000, margin: '0 auto', padding: '40px 24px' }}>
       <header style={{ marginBottom: 40 }}>
-        <a href={`/admin/event/${eventId}`} style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: 14, display: 'flex', alignItems: 'center', gap: 6, marginBottom: 16, fontWeight: 600 }}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="m15 18-6-6 6-6"/></svg> 返回管理中心
-        </a>
+        <NavBackButton
+          href={`/admin/event/${eventId}`}
+          label="返回管理中心"
+          style={{ marginBottom: 16, fontSize: 14, padding: '8px 16px', borderRadius: 8 }}
+        />
         <h1 className="font-serif" style={{ fontSize: 36, fontWeight: 800, color: 'var(--accent-blue)', marginBottom: 8, letterSpacing: '-0.5px' }}>會後商機轉換報告 (ROI)</h1>
         <p style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>EVENT PROJECT: {eventId} · 數據即時更新中</p>
       </header>

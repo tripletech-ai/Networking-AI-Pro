@@ -31,11 +31,21 @@ export default function FloatingContactsSidebar({ show }: { show: boolean }) {
   useEffect(() => {
     loadContacts();
     const openHandler = () => {
-      // Re-load contacts when sidebar opens to get latest data
       setIsOpen(true);
       loadContacts();
     };
-    const savedHandler = () => loadContacts();
+    const savedHandler = (e: any) => {
+      // If a new contact is passed directly, optimistically add it to the top
+      if (e.detail?.newContact) {
+        setContacts(prev => {
+          const exists = prev.some(c => c.id === e.detail.newContact.id);
+          if (exists) return prev;
+          return [e.detail.newContact, ...prev];
+        });
+      } else {
+        loadContacts();
+      }
+    };
     window.addEventListener('contactSaved', savedHandler);
     window.addEventListener('openSidebar', openHandler);
     return () => {

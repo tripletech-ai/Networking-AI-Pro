@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import NavBackButton from '@/components/NavBackButton';
 
 interface DashboardData {
   eventName: string;
@@ -109,13 +110,11 @@ export default function LiveDashboardPage() {
               {data.isActive ? '活動進行中' : '活動已暫停'}
             </span>
           </div>
-          <button
-            onClick={() => router.push(`/admin/event/${eventId}`)}
-            className="btn-outline"
+          <NavBackButton
+            href={`/admin/event/${eventId}`}
+            label="返回管理"
             style={{ padding: '8px 20px', fontSize: 13, borderRadius: 100 }}
-          >
-            返回管理
-          </button>
+          />
         </div>
       </div>
 

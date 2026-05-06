@@ -55,11 +55,10 @@ export default function SaveContactButton({ member, style }: Props) {
       return;
     }
 
-    // Optimistic: mark saved and open sidebar INSTANTLY before API call
+    // Immediately show button as saved (optimistic for the button only)
     setIsSaved(true);
-    window.dispatchEvent(new Event('openSidebar'));
-
     setIsLoading(true);
+
     try {
       const res = await fetch('/api/contacts', {
         method: 'POST',
@@ -67,12 +66,15 @@ export default function SaveContactButton({ member, style }: Props) {
         body: JSON.stringify({ connectorId: user.id, connectedToId: member.id, eventId: user.eventId || null })
       });
       const data = await res.json();
-      if (!data.success) {
+      if (data.success) {
+        // Only NOW open sidebar — contact is confirmed in DB
+        // Pass the member info to the sidebar for instant optimistic render
+        window.dispatchEvent(new CustomEvent('contactSaved', { detail: { newContact: member } })); 
+        window.dispatchEvent(new Event('openSidebar'));  // then open
+      } else {
         setIsSaved(false);
         alert(data.error || '儲存失敗');
       }
-      // Always reload sidebar to get confirmed server state
-      window.dispatchEvent(new Event('contactSaved'));
     } catch {
       setIsSaved(false);
       alert('連線失敗');
