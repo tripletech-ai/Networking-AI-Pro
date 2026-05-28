@@ -19,7 +19,10 @@
       "mcp__Claude_Preview__preview_start",
       "mcp__e8cf1906-6602-463f-b47e-4287714316b5__search_docs",
       "Bash(rm -f test-db.mjs prisma/seed.ts src/lib/supabase.ts)",
-      "Bash(rm -rf src/app/api/auth/callback src/app/api/contacts)"
+      "Bash(rm -rf src/app/api/auth/callback src/app/api/contacts)",
+      "Skill(health)",
+      "Skill(health:*)",
+      "Bash(git add *)"
     ]
   }
 }
