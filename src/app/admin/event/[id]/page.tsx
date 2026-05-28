@@ -41,6 +41,8 @@ export default async function EventDashboardPage({ params }: { params: Promise<{
     services: m.services || '',
     lookingFor: m.lookingFor || '',
     painPoints: m.painPoints || '',
+    checkinCode: m.checkinCode || '',
+    checkedIn: event.attendances.some((a: any) => a.memberId === m.id && a.checkinAt),
   }));
 
   return (

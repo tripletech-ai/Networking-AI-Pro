@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import MemberEditModal from '@/components/MemberEditModal';
@@ -13,6 +13,8 @@ interface Member {
   services: string;
   lookingFor: string;
   painPoints: string;
+  checkinCode?: string;
+  checkedIn?: boolean;
 }
 
 interface Props {
@@ -25,6 +27,11 @@ export default function MemberTable({ members: initialMembers, eventId }: Props)
   const [memberList, setMemberList] = useState<Member[]>(initialMembers);
   const [confirmingDelete, setConfirmingDelete] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const filteredMembers = memberList.filter(m =>
+    !searchQuery || m.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    m.company.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const handleDelete = async (memberId: string) => {
     setDeleting(true);
@@ -54,6 +61,15 @@ export default function MemberTable({ members: initialMembers, eventId }: Props)
 
   return (
     <>
+      <div style={{ marginBottom: 16 }}>
+        <input
+          type="text"
+          placeholder="搜尋姓名或公司..."
+          value={searchQuery}
+          onChange={e => setSearchQuery(e.target.value)}
+          style={{ padding: '8px 14px', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 14, width: '100%', maxWidth: 300 }}
+        />
+      </div>
       <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
         <thead>
           <tr style={{ color: 'var(--text-secondary)', fontSize: 13, borderBottom: '2px solid var(--accent-slate)', background: 'var(--bg-secondary)' }}>
@@ -61,11 +77,13 @@ export default function MemberTable({ members: initialMembers, eventId }: Props)
             <th style={{ padding: '16px', fontWeight: 700, letterSpacing: '0.5px' }}>公司單位 / 職稱</th>
             <th style={{ padding: '16px', fontWeight: 700, letterSpacing: '0.5px' }}>精準產業</th>
             <th style={{ padding: '16px', fontWeight: 700, letterSpacing: '0.5px' }}>公會分會</th>
+            <th style={{ padding: '16px', fontWeight: 700, letterSpacing: '0.5px' }}>通關碼</th>
+            <th style={{ padding: '16px', fontWeight: 700, letterSpacing: '0.5px' }}>報到狀態</th>
             <th style={{ padding: '16px', fontWeight: 700, letterSpacing: '0.5px', textAlign: 'right' }}>管理操作</th>
           </tr>
         </thead>
         <tbody>
-          {memberList.map((member: Member) => (
+          {filteredMembers.map((member: Member) => (
             <tr key={member.id} style={{ borderBottom: '1px solid #f8fafc', color: 'var(--text-primary)', fontSize: 14 }}>
               <td className="font-serif" style={{ padding: '16px', fontWeight: 700, color: 'var(--accent-blue)', whiteSpace: 'nowrap', maxWidth: 120, overflow: 'hidden', textOverflow: 'ellipsis' }}>{member.name}</td>
               <td style={{ padding: '16px', maxWidth: 220, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 500 }}>
@@ -77,6 +95,16 @@ export default function MemberTable({ members: initialMembers, eventId }: Props)
                 </span>
               </td>
               <td style={{ padding: '16px', whiteSpace: 'nowrap', color: 'var(--text-secondary)' }}>{member.chapter}</td>
+              <td style={{ padding: '16px', fontFamily: 'monospace', fontWeight: 700, fontSize: 16, letterSpacing: '4px', color: '#475569' }}>
+                {member.checkinCode || '—'}
+              </td>
+              <td style={{ padding: '16px' }}>
+                {member.checkedIn ? (
+                  <span style={{ background: 'rgba(22,163,74,0.08)', color: '#16a34a', padding: '4px 12px', borderRadius: 20, fontSize: 12, fontWeight: 700 }}>✓ 已報到</span>
+                ) : (
+                  <span style={{ background: '#f8fafc', color: '#94a3b8', padding: '4px 12px', borderRadius: 20, fontSize: 12, fontWeight: 600 }}>未報到</span>
+                )}
+              </td>
               <td style={{ padding: '16px', textAlign: 'right', whiteSpace: 'nowrap' }}>
                 {confirmingDelete === member.id ? (
                   <div style={{ display: 'flex', gap: 6, justifyContent: 'flex-end', alignItems: 'center' }}>
@@ -135,6 +163,12 @@ export default function MemberTable({ members: initialMembers, eventId }: Props)
           ))}
         </tbody>
       </table>
+
+      {filteredMembers.length === 0 && memberList.length > 0 && (
+        <div style={{ textAlign: 'center', padding: '40px 0', color: '#64748b', fontSize: 14 }}>
+          找不到符合搜尋條件的來賓。
+        </div>
+      )}
 
       {memberList.length === 0 && (
         <div style={{ textAlign: 'center', padding: '40px 0', color: '#64748b', fontSize: 14 }}>
