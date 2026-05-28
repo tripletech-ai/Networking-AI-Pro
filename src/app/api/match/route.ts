@@ -37,8 +37,30 @@ async function getEmbedding(text: string) {
   } catch { return null; }
 }
 
+// Simple in-memory rate limiter (resets on cold start, sufficient for event scale)
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT = 5;
+const RATE_WINDOW_MS = 5 * 60 * 1000;
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(ip);
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_WINDOW_MS });
+    return true;
+  }
+  if (entry.count >= RATE_LIMIT) return false;
+  entry.count++;
+  return true;
+}
+
 export async function POST(req: NextRequest) {
   try {
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? 'unknown';
+    if (!checkRateLimit(ip)) {
+      return NextResponse.json({ error: '請求過於頻繁，請稍後再試' }, { status: 429 });
+    }
+
     if (!OPENAI_API_KEY) return NextResponse.json({ error: 'API key 未設定' }, { status: 500 });
 
     const body = await req.json();
@@ -51,7 +73,14 @@ export async function POST(req: NextRequest) {
 
   // Directly use eventId from the request body instead of relying on config.json
   const eventId = body.eventId || null;
-  
+
+  if (eventId) {
+    const eventCheck = await prisma.event.findUnique({ where: { id: eventId } });
+    if (!eventCheck || !eventCheck.isActive) {
+      return NextResponse.json({ error: '活動不存在或已結束' }, { status: 404 });
+    }
+  }
+
   let organizerId = null;
   const currentEvent = eventId ? await prisma.event.findUnique({ where: { id: eventId } }) : null;
   if (currentEvent) organizerId = currentEvent.organizerId;
