@@ -70,6 +70,7 @@ model MemberProfile {
   embedding String?
 
   qrCodeToken String @unique @default(uuid()) // 每位會員的專屬名片 QR Code
+  checkinCode String @unique @default("")
 
   attendances Attendance[] // 去過哪些活動
 
