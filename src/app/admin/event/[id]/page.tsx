@@ -65,7 +65,7 @@ export default async function EventDashboardPage({ params }: { params: Promise<{
             <p style={{ color: 'var(--text-secondary)', fontSize: 16, marginBottom: 24, fontWeight: 500 }}>
               共 {members.length} 位嘉賓已準備好進行 AI 媒合
             </p>
-            <CopyLinkButton eventId={event.id} />
+            <CopyLinkButton eventId={event.id} isActive={event.isActive} />
             <div style={{ marginTop: 20, display: 'flex', gap: 12 }}>
                 <Link href={`/admin/event/${event.id}/dashboard`} className="btn-gold" style={{
                   display: 'inline-flex', alignItems: 'center', gap: 8,

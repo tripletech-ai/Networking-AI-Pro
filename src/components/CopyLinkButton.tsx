@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 
-export default function CopyLinkButton({ eventId }: { eventId: string }) {
+export default function CopyLinkButton({ eventId, isActive }: { eventId: string; isActive: boolean }) {
   const [copied, setCopied] = useState(false);
   const [url, setUrl] = useState('');
 
@@ -11,6 +11,10 @@ export default function CopyLinkButton({ eventId }: { eventId: string }) {
   }, [eventId]);
 
   const handleCopy = () => {
+    if (!isActive) {
+      alert('活動目前已暫停，來賓報到連結暫時無效。請先開啟活動再複製連結。');
+      return;
+    }
     navigator.clipboard.writeText(url);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
