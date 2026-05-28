@@ -1,23 +1,31 @@
-import { jwtVerify, SignJWT } from 'jose';
+﻿import { jwtVerify, SignJWT } from 'jose';
 import { cookies } from 'next/headers';
 
-const SECRET_KEY = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'premium-networking-ai-super-secret-key-2026'
-);
+function getSecret() {
+  const s = process.env.JWT_SECRET;
+  if (!s) throw new Error('JWT_SECRET env var is not set');
+  return new TextEncoder().encode(s);
+}
 
-export async function signToken(payload: any) {
-  return await new SignJWT(payload)
+function getCheckinSecret() {
+  const s = process.env.JWT_SECRET;
+  if (!s) throw new Error('JWT_SECRET env var is not set');
+  return new TextEncoder().encode(s + ':checkin');
+}
+
+export async function signToken(payload: Record<string, unknown>) {
+  return new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime('24h')
-    .sign(SECRET_KEY);
+    .sign(getSecret());
 }
 
 export async function verifyToken(token: string) {
   try {
-    const { payload } = await jwtVerify(token, SECRET_KEY);
+    const { payload } = await jwtVerify(token, getSecret());
     return payload;
-  } catch (error) {
+  } catch {
     return null;
   }
 }
@@ -26,5 +34,34 @@ export async function getSession() {
   const cookieStore = await cookies();
   const token = cookieStore.get('auth-token')?.value;
   if (!token) return null;
-  return await verifyToken(token);
+  return verifyToken(token);
+}
+
+export async function signCheckinToken(payload: { memberId: string; eventId: string }) {
+  return new SignJWT(payload as Record<string, unknown>)
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuedAt()
+    .setExpirationTime('8h')
+    .sign(getCheckinSecret());
+}
+
+export async function verifyCheckinToken(token: string): Promise<{ memberId: string; eventId: string } | null> {
+  try {
+    const { payload } = await jwtVerify(token, getCheckinSecret());
+    if (typeof payload.memberId === 'string' && typeof payload.eventId === 'string') {
+      return { memberId: payload.memberId, eventId: payload.eventId };
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+export async function getCheckinSession(eventId: string) {
+  const cookieStore = await cookies();
+  const token = cookieStore.get('checkin-token')?.value;
+  if (!token) return null;
+  const payload = await verifyCheckinToken(token);
+  if (!payload || payload.eventId !== eventId) return null;
+  return payload;
 }
