@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { GuestData } from '@/types';
@@ -30,7 +30,7 @@ export default function GuestForm({ onSubmit, error }: Props) {
   });
 
   // Magic Fill state
-  const [showMagic, setShowMagic] = useState(false);
+  const [showMagic, setShowMagic] = useState(true);
   const [magicText, setMagicText] = useState('');
   const [magicLoading, setMagicLoading] = useState(false);
   const [magicDone, setMagicDone] = useState(false);
@@ -89,8 +89,8 @@ export default function GuestForm({ onSubmit, error }: Props) {
           onClick={() => setShowMagic(!showMagic)}
           style={{
             width: '100%', padding: '14px 20px', borderRadius: 12,
-            background: 'linear-gradient(135deg, rgba(197, 168, 128, 0.15), rgba(197, 168, 128, 0.05))',
-            border: '1px dashed rgba(197, 168, 128, 0.5)',
+            border: '2px solid rgba(197, 168, 128, 0.6)',
+            background: 'linear-gradient(135deg, rgba(197, 168, 128, 0.18), rgba(197, 168, 128, 0.08))',
             color: '#c5a880', cursor: 'pointer', fontSize: 15, fontWeight: 600,
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
             transition: 'all 0.2s'
@@ -99,7 +99,7 @@ export default function GuestForm({ onSubmit, error }: Props) {
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
           </svg>
-          ✨ AI Magic Fill — 一句話自動填表
+          ✨ AI 一句話建檔 (推薦)
         </button>
 
         {/* Magic Fill 對話框 */}
@@ -146,6 +146,10 @@ export default function GuestForm({ onSubmit, error }: Props) {
         )}
       </div>
 
+
+      <div style={{ textAlign: 'center', fontSize: 13, color: '#94a3b8', margin: '8px 0 16px' }}>
+        或 ↓ 手動逐欄填寫
+      </div>
       <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', margin: '0 0 24px' }} />
 
       {/* 表單欄位 */}
@@ -240,3 +244,6 @@ export default function GuestForm({ onSubmit, error }: Props) {
     </div>
   );
 }
+
+
+
