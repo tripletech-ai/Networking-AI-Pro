@@ -26,6 +26,7 @@ export default function ImportToEventPage() {
   const [mapping, setMapping] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [progress, setProgress] = useState('');
 
   const parseCSVRaw = (text: string) => {
     const result = [];
@@ -77,6 +78,7 @@ export default function ImportToEventPage() {
     setLoading(true);
     setError('');
 
+    setProgress('準備匯入資料...');
     const mappedGuests = csvRows.map(row => {
       const getVal = (key: string) => mapping[key] !== undefined ? row[mapping[key]] : '';
       return {
