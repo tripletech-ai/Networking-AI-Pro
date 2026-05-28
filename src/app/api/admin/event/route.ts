@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
+import { generateUniqueCheckinCode } from '@/lib/checkinCode';
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
@@ -60,13 +61,15 @@ export async function POST(req: NextRequest) {
     for (let i = 0; i < validGuests.length; i += BATCH_SIZE) {
       const batch = validGuests.slice(i, i + BATCH_SIZE);
       const created = await Promise.all(batch.map(async (g: any) => {
+        const checkinCode = await generateUniqueCheckinCode();
         const member = await prisma.memberProfile.create({
           data: {
             organizerId: String(session.id),
             name: g.name, chapter: g.chapter || '貴賓', company: g.company || '無',
             title: g.title || '', industry: g.industry || '未分類', services: g.services || '',
             lookingFor: g.lookingFor || '', painPoints: g.painPoints || '',
-            embedding: null // will be updated asynchronously
+            embedding: null, // will be updated asynchronously
+            checkinCode
           }
         });
         await prisma.attendance.create({

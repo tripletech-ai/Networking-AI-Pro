@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
+import { generateUniqueCheckinCode } from '@/lib/checkinCode';
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = (await params) as { id: string };
@@ -30,6 +31,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
       return str.substring(0, maxLen);
     };
 
+    const checkinCode = await generateUniqueCheckinCode();
     const member = await prisma.memberProfile.create({
       data: {
         organizerId: String(organizer.id),
@@ -41,6 +43,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
         services: safeString(data.services, 500),
         lookingFor: safeString(data.lookingFor, 500),
         painPoints: safeString(data.painPoints, 500),
+        checkinCode
       }
     });
 
