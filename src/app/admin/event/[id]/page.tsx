@@ -7,6 +7,7 @@ import CopyLinkButton from '@/components/CopyLinkButton';
 import EventControls from '@/components/EventControls';
 import MemberTable from '@/components/MemberTable';
 import EventStats from '@/components/EventStats';
+import PrintCodesButton from '@/components/PrintCodesButton';
 
 export default async function EventDashboardPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await getSession();
@@ -99,6 +100,10 @@ export default async function EventDashboardPage({ params }: { params: Promise<{
               <a href={`/api/admin/event/${event.id}/export`} target="_blank" style={{ color: '#16a34a', background: 'rgba(22, 163, 74, 0.08)', padding: '8px 16px', borderRadius: 8, fontSize: 13, fontWeight: 600, textDecoration: 'none' }}>
                 ↓ 匯出 CSV
               </a>
+              <PrintCodesButton
+                members={membersForTable.map(m => ({ name: m.name, company: m.company, checkinCode: m.checkinCode }))}
+                eventName={event.name}
+              />
               <Link href={`/admin/event/${event.id}/member/new`} className="btn-primary" style={{ padding: '8px 20px', fontSize: 13, textDecoration: 'none' }}>
                 + 單筆新增
               </Link>
