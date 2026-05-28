@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { getCheckinSession, signCheckinToken } from '@/lib/auth';
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
@@ -88,6 +89,15 @@ export async function POST(req: NextRequest) {
       if (!ev || !ev.isActive) return NextResponse.json({ error: '活動不存在或已結束' }, { status: 404 });
     }
 
+    // Auth guard: registered members must have a valid checkin-token for this event.
+    // Walk-ins are exempt — they create their record in this same call.
+    if (!isWalkIn && eventId) {
+      const session = await getCheckinSession(eventId);
+      if (!session) {
+        return NextResponse.json({ error: '請先完成報到' }, { status: 401 });
+      }
+    }
+
     const userText = `服務：${services}。尋找：${lookingFor}。痛點：${painPoints}`;
     const userEmbedding = await getEmbedding(userText);
 
@@ -167,12 +177,30 @@ export async function POST(req: NextRequest) {
       return { ...m, id: p?.id };
     });
 
-    return NextResponse.json({
+    const responseData = {
       matches: mapIds(matchResult.matches ?? []),
       grid: mapIds(gridResult.grid ?? []),
       strategicSummary: gridResult.strategicSummary ?? '',
       memberId: returnedMemberId,
-    });
+    };
+
+    const response = NextResponse.json(responseData);
+
+    // Issue checkin-token for walk-ins so they can access /api/members/all
+    if (isWalkIn && returnedMemberId && eventId) {
+      const checkinToken = await signCheckinToken({ memberId: returnedMemberId, eventId });
+      response.cookies.set({
+        name: 'checkin-token',
+        value: checkinToken,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+        maxAge: 60 * 60 * 8,
+      });
+    }
+
+    return response;
   } catch (error: any) {
     console.error('Match API Error:', error);
     return NextResponse.json({ error: error.message ?? '發生未知錯誤' }, { status: 500 });

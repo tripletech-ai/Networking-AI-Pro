@@ -8,9 +8,10 @@ function getSecret() {
 }
 
 function getCheckinSecret() {
-  const s = process.env.JWT_SECRET;
-  if (!s) throw new Error('JWT_SECRET env var is not set');
-  return new TextEncoder().encode(s + ':checkin');
+  // Prefer a dedicated secret; fall back to derived value for backwards compat
+  const s = process.env.JWT_CHECKIN_SECRET || process.env.JWT_SECRET;
+  if (!s) throw new Error('JWT_CHECKIN_SECRET env var is not set');
+  return new TextEncoder().encode(s);
 }
 
 export async function signToken(payload: Record<string, unknown>) {

@@ -15,9 +15,9 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     return NextResponse.json({ error: '活動不存在或已結束' }, { status: 404 });
   }
 
-  // Find member with this code in this event
+  // Find member with this code in this event, scoped to this organizer to prevent cross-event leakage
   const attendance = await prisma.attendance.findFirst({
-    where: { eventId, member: { checkinCode: code } },
+    where: { eventId, member: { checkinCode: code, organizerId: event.organizerId } },
     include: { member: true },
   });
 
