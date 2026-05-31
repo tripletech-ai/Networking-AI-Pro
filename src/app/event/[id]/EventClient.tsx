@@ -6,20 +6,12 @@ import GuestForm from '@/components/GuestForm';
 import MatchResult from '@/components/MatchResult';
 import NetworkGrid from '@/components/NetworkGrid';
 import FloatingContactsSidebar from '@/components/FloatingContactsSidebar';
+import AnimatedDots from '@/components/AnimatedDots';
 import { useParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import useSWR from 'swr';
 
 import type { GuestData, MatchData, GridPerson } from '@/types';
-
-function AnimatedDots() {
-  const [count, setCount] = useState(1);
-  useEffect(() => {
-    const id = setInterval(() => setCount(c => (c % 3) + 1), 500);
-    return () => clearInterval(id);
-  }, []);
-  return <span>{'•'.repeat(count)}</span>;
-}
 
 export default function EventClient({ eventName }: { eventName: string }) {
   const params = useParams();
@@ -154,7 +146,9 @@ export default function EventClient({ eventName }: { eventName: string }) {
 
   return (
     <main style={{ minHeight: '100dvh', position: 'relative', zIndex: 1, background: 'var(--bg-primary)' }}>
-      <header style={{
+      <header
+        className="event-header"
+        style={{
         padding: '24px 32px',
         borderBottom: '1px solid rgba(197, 168, 128, 0.1)',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -167,7 +161,7 @@ export default function EventClient({ eventName }: { eventName: string }) {
           style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 14, padding: 0 }}
         >
           <div style={{ width: 32, height: 32, background: 'linear-gradient(135deg, #c5a880, #8c7355)', borderRadius: 8, boxShadow: '0 4px 12px rgba(197, 168, 128, 0.2)' }} />
-          <div style={{ fontSize: 17, fontWeight: 700, letterSpacing: '1px', color: '#f8fafc', fontFamily: "'Playfair Display', serif" }}>
+          <div className="event-header-title" style={{ fontSize: 17, fontWeight: 700, letterSpacing: '1px', color: '#f8fafc', fontFamily: "'Playfair Display', serif" }}>
             AI Networking <span style={{ color: '#c5a880' }}>Pro</span>
           </div>
         </button>
@@ -179,7 +173,7 @@ export default function EventClient({ eventName }: { eventName: string }) {
         )}
       </header>
 
-      <div style={{ maxWidth: 860, margin: '0 auto', padding: '40px 24px 80px' }}>
+      <div className="event-main-content" style={{ maxWidth: 860, margin: '0 auto', padding: '40px 24px 80px' }}>
         <AnimatePresence mode="wait">
 
           {appState === 'checkin' && (
@@ -195,11 +189,11 @@ export default function EventClient({ eventName }: { eventName: string }) {
               </div>
 
               {/* Code input */}
-              <div className="glass-card" style={{ padding: 36, marginBottom: 40, background: '#fff', border: '1px solid #e2e8f0' }}>
+              <div className="glass-card checkin-card" style={{ padding: 36, marginBottom: 40, background: '#fff', border: '1px solid #e2e8f0' }}>
                 <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--accent-blue)', marginBottom: 20 }}>
                   已報名嘉賓 — 輸入通關碼報到
                 </h2>
-                <div style={{ display: 'flex', gap: 12 }}>
+                <div className="checkin-input-row" style={{ display: 'flex', gap: 12 }}>
                   <input
                     type="text"
                     maxLength={4}
@@ -266,7 +260,7 @@ export default function EventClient({ eventName }: { eventName: string }) {
           {appState === 'results' && guestData && (
             <motion.div key="results" ref={resultsRef} initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
               {/* Welcome card */}
-              <div className="glass-card" style={{ padding: '28px 32px', marginBottom: 32, background: 'linear-gradient(135deg, rgba(197,168,128,0.05), transparent)', borderLeft: '4px solid #c5a880', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div className="glass-card welcome-card" style={{ padding: '28px 32px', marginBottom: 32, background: 'linear-gradient(135deg, rgba(197,168,128,0.05), transparent)', borderLeft: '4px solid #c5a880', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
                   <div style={{ fontSize: 13, color: '#c5a880', marginBottom: 8, fontWeight: 600, letterSpacing: '1px' }}>分析完成</div>
                   <div style={{ fontSize: 24, fontWeight: 800, fontFamily: "'Playfair Display', serif" }}>
@@ -284,9 +278,9 @@ export default function EventClient({ eventName }: { eventName: string }) {
               {/* Tabs */}
               <div style={{ display: 'flex', gap: 12, marginBottom: 32, background: '#fff', padding: '6px', borderRadius: 16, border: '1px solid #e2e8f0' }}>
                 {[{ id: 'match', label: '黃金夥伴', sub: '深度痛點媒合' }, { id: 'grid', label: '戰略九宮格', sub: '全場跨界佈局' }].map(tab => (
-                  <button key={tab.id} onClick={() => setActiveView(tab.id as 'match' | 'grid')} style={{ flex: 1, padding: '16px 20px', textAlign: 'center', background: activeView === tab.id ? 'var(--accent-gold)' : 'transparent', border: 'none', borderRadius: 12, color: activeView === tab.id ? '#fff' : 'var(--text-secondary)', cursor: 'pointer', transition: 'all 0.3s' }}>
-                    <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 4 }}>{tab.label}</div>
-                    <div style={{ fontSize: 12, opacity: 0.8 }}>{tab.sub}</div>
+                  <button key={tab.id} className="tab-btn" onClick={() => setActiveView(tab.id as 'match' | 'grid')} style={{ flex: 1, padding: '16px 20px', textAlign: 'center', background: activeView === tab.id ? 'var(--accent-gold)' : 'transparent', border: 'none', borderRadius: 12, color: activeView === tab.id ? '#fff' : 'var(--text-secondary)', cursor: 'pointer', transition: 'all 0.3s' }}>
+                    <div className="tab-btn-label" style={{ fontSize: 16, fontWeight: 600, marginBottom: 4 }}>{tab.label}</div>
+                    <div className="tab-btn-sub" style={{ fontSize: 12, opacity: 0.8 }}>{tab.sub}</div>
                   </button>
                 ))}
               </div>
