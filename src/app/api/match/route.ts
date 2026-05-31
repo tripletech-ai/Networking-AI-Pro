@@ -4,6 +4,25 @@ import { getCheckinSession, signCheckinToken } from '@/lib/auth';
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
+// 分會名稱正規化：統一同一分會的各種寫法
+function normalizeChapter(raw: string): string {
+  const s = (raw || '').trim().replace(/\s+/g, '');
+  // 長輝系列
+  if (s.includes('長輝')) return '長輝分會';
+  // 劉當莊 / 劉當
+  if (s.includes('劉當')) return '劉當莊分會';
+  // 金鑫系列
+  if (s.includes('金鑫')) return '金鑫分會';
+  // 長翔
+  if (s.includes('長翔')) return '長翔分會';
+  // 大漢
+  if (s.includes('大漢')) return '大漢分會';
+  // 通用處理：移除「分會」結尾後重新加上
+  const cleaned = s.replace(/分會$/,'').replace(/白金$/, '').replace(/菁英$/, '');
+  if (!cleaned || cleaned === '貴賓' || cleaned === '無') return cleaned || '貴賓';
+  return cleaned + '分會';
+}
+
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 const RATE_LIMIT = 5;
 const RATE_WINDOW_MS = 5 * 60 * 1000;
@@ -152,9 +171,9 @@ export async function POST(req: NextRequest) {
 
     const topCandidates = candidates.slice(0, 12);
     const guestListText = topCandidates.map((g: any) =>
-      `${g.name}｜${g.chapter}｜${g.company}｜${g.title}｜${g.industry}｜${g.services}｜尋找：${g.lookingFor}｜痛點：${g.painPoints}`
+      `${g.name}｜${normalizeChapter(g.chapter || '貴賓')}｜${g.company}｜${g.title}｜${g.industry}｜${g.services}｜尋找：${g.lookingFor}｜痛點：${g.painPoints}`
     ).join('\n');
-    const userProfile = `姓名：${name}｜分會：${chapter || '貴賓'}｜公司：${company}｜職稱：${title}｜產業：${industry}｜服務：${services}｜尋找：${lookingFor}｜痛點：${painPoints}`;
+    const userProfile = `姓名：${name}｜分會：${normalizeChapter(chapter || '貴賓')}｜公司：${company}｜職稱：${title}｜產業：${industry}｜服務：${services}｜尋找：${lookingFor}｜痛點：${painPoints}`;
 
     const matchMsg = `使用者資料：${userProfile}\n\n由 AI 向量運算篩選的高關聯候選名單：\n${guestListText}\n\n請從上方選出最適合的 3 位黃金夥伴。回傳格式：\n{"matches":[{"name":"","company":"","title":"","industry":"","chapter":"","services":"","matchReason":"","icebreaker":""},{"name":"","company":"","title":"","industry":"","chapter":"","services":"","matchReason":"","icebreaker":""},{"name":"","company":"","title":"","industry":"","chapter":"","services":"","matchReason":"","icebreaker":""}]}`;
     const gridMsg = `使用者資料：${userProfile}\n\n由 AI 向量運算篩選的高關聯候選名單：\n${guestListText}\n\n請選出 8 位來自不同產業的合作夥伴，建構全方位「跨界商業生態系」。\n回傳格式（position 填 0 到 7）：\n{"grid":[{"position":0,"name":"","company":"","title":"","industry":"","chapter":"","reason":""},{"position":1,"name":"","company":"","title":"","industry":"","chapter":"","reason":""},{"position":2,"name":"","company":"","title":"","industry":"","chapter":"","reason":""},{"position":3,"name":"","company":"","title":"","industry":"","chapter":"","reason":""},{"position":4,"name":"","company":"","title":"","industry":"","chapter":"","reason":""},{"position":5,"name":"","company":"","title":"","industry":"","chapter":"","reason":""},{"position":6,"name":"","company":"","title":"","industry":"","chapter":"","reason":""},{"position":7,"name":"","company":"","title":"","industry":"","chapter":"","reason":""}],"strategicSummary":""}`;

@@ -27,10 +27,17 @@ export default function MemberTable({ members: initialMembers, eventId }: Props)
   const [memberList, setMemberList] = useState<Member[]>(initialMembers);
   const [confirmingDelete, setConfirmingDelete] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const filteredMembers = memberList.filter(m =>
-    !searchQuery || m.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    m.company.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const [checkinFilter, setCheckinFilter] = useState<'all' | 'checkedIn' | 'notCheckedIn'>('all');
+  const filteredMembers = memberList.filter(m => {
+    const matchSearch = !searchQuery ||
+      m.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      m.company.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchCheckin =
+      checkinFilter === 'all' ? true :
+      checkinFilter === 'checkedIn' ? !!m.checkedIn :
+      !m.checkedIn;
+    return matchSearch && matchCheckin;
+  });
 
   const handleDelete = async (memberId: string) => {
     // 先樂觀刪除，讓 UI 立即回應
@@ -64,6 +71,22 @@ export default function MemberTable({ members: initialMembers, eventId }: Props)
           style={{ padding: '8px 14px', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 14, width: '100%', maxWidth: 300 }}
         />
       </div>
+      <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
+        {(['all', 'checkedIn', 'notCheckedIn'] as const).map(f => (
+          <button
+            key={f}
+            onClick={() => setCheckinFilter(f)}
+            style={{
+              padding: '6px 16px', borderRadius: 100, fontSize: 13, fontWeight: 600,
+              border: 'none', cursor: 'pointer', transition: 'all 0.15s',
+              background: checkinFilter === f ? (f === 'checkedIn' ? '#16a34a' : f === 'notCheckedIn' ? '#94a3b8' : 'var(--accent-blue)') : '#f1f5f9',
+              color: checkinFilter === f ? '#fff' : '#64748b',
+            }}
+          >
+            {f === 'all' ? `全部 (${memberList.length})` : f === 'checkedIn' ? `✓ 已報到 (${memberList.filter(m => m.checkedIn).length})` : `未報到 (${memberList.filter(m => !m.checkedIn).length})`}
+          </button>
+        ))}
+      </div>
       <div style={{ overflowX: 'auto', overflowY: 'auto', maxHeight: '60vh', borderRadius: 12, border: '1px solid #e2e8f0', position: 'relative' }}>
       <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: 700 }}>
         <thead style={{ position: 'sticky', top: 0, zIndex: 10 }}>
@@ -72,6 +95,7 @@ export default function MemberTable({ members: initialMembers, eventId }: Props)
             <th style={{ padding: '16px', fontWeight: 700, letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>公司單位 / 職稱</th>
             <th style={{ padding: '16px', fontWeight: 700, letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>精準產業</th>
             <th style={{ padding: '16px', fontWeight: 700, letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>公會分會</th>
+            <th style={{ padding: '16px', fontWeight: 700, letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>提供服務</th>
             <th style={{ padding: '16px', fontWeight: 700, letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>通關碼</th>
             <th style={{ padding: '16px', fontWeight: 700, letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>報到狀態</th>
             <th style={{ padding: '16px', fontWeight: 700, letterSpacing: '0.5px', whiteSpace: 'nowrap', textAlign: 'right' }}>管理操作</th>
@@ -90,6 +114,9 @@ export default function MemberTable({ members: initialMembers, eventId }: Props)
                 </span>
               </td>
               <td style={{ padding: '16px', whiteSpace: 'nowrap', color: 'var(--text-secondary)' }}>{member.chapter}</td>
+              <td style={{ padding: '16px', maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: 13, color: '#64748b' }}>
+                {member.services || '—'}
+              </td>
               <td style={{ padding: '16px', fontFamily: 'monospace', fontWeight: 700, fontSize: 16, letterSpacing: '4px', color: '#475569' }}>
                 {member.checkinCode || '—'}
               </td>

@@ -28,6 +28,7 @@ export default function EventClient({ eventName }: { eventName: string }) {
   const [actionsDone, setActionsDone] = useState<Set<string>>(new Set());
 
   const resultsRef = useRef<HTMLDivElement>(null);
+  const tabContentRef = useRef<HTMLDivElement>(null);
 
   // Check-in code state
   const [checkinCode, setCheckinCode] = useState('');
@@ -167,9 +168,17 @@ export default function EventClient({ eventName }: { eventName: string }) {
         </button>
 
         {appState === 'results' && (
-          <button onClick={clearSession} style={{ background: 'transparent', border: '1px solid rgba(197, 168, 128, 0.3)', borderRadius: 8, color: '#c5a880', padding: '8px 16px', fontSize: 13, cursor: 'pointer' }}>
-            重新報到
-          </button>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button
+              onClick={() => guestData && runAIMatch({ ...guestData })}
+              style={{ background: 'transparent', border: '1px solid rgba(197, 168, 128, 0.3)', borderRadius: 8, color: '#c5a880', padding: '8px 14px', fontSize: 13, cursor: 'pointer' }}
+            >
+              🔄 重新媒合
+            </button>
+            <button onClick={clearSession} style={{ background: 'transparent', border: '1px solid rgba(197, 168, 128, 0.3)', borderRadius: 8, color: '#c5a880', padding: '8px 16px', fontSize: 13, cursor: 'pointer' }}>
+              重新報到
+            </button>
+          </div>
         )}
       </header>
 
@@ -278,13 +287,17 @@ export default function EventClient({ eventName }: { eventName: string }) {
               {/* Tabs */}
               <div style={{ display: 'flex', gap: 12, marginBottom: 32, background: '#fff', padding: '6px', borderRadius: 16, border: '1px solid #e2e8f0' }}>
                 {[{ id: 'match', label: '黃金夥伴', sub: '深度痛點媒合' }, { id: 'grid', label: '戰略九宮格', sub: '全場跨界佈局' }].map(tab => (
-                  <button key={tab.id} className="tab-btn" onClick={() => setActiveView(tab.id as 'match' | 'grid')} style={{ flex: 1, padding: '16px 20px', textAlign: 'center', background: activeView === tab.id ? 'var(--accent-gold)' : 'transparent', border: 'none', borderRadius: 12, color: activeView === tab.id ? '#fff' : 'var(--text-secondary)', cursor: 'pointer', transition: 'all 0.3s' }}>
+                  <button key={tab.id} className="tab-btn" onClick={() => {
+                    setActiveView(tab.id as 'match' | 'grid');
+                    setTimeout(() => tabContentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+                  }} style={{ flex: 1, padding: '16px 20px', textAlign: 'center', background: activeView === tab.id ? 'var(--accent-gold)' : 'transparent', border: 'none', borderRadius: 12, color: activeView === tab.id ? '#fff' : 'var(--text-secondary)', cursor: 'pointer', transition: 'all 0.3s' }}>
                     <div className="tab-btn-label" style={{ fontSize: 16, fontWeight: 600, marginBottom: 4 }}>{tab.label}</div>
                     <div className="tab-btn-sub" style={{ fontSize: 12, opacity: 0.8 }}>{tab.sub}</div>
                   </button>
                 ))}
               </div>
 
+              <div ref={tabContentRef}>
               {activeView === 'grid' && (
                 grid.length === 0 ? (
                   <div style={{ textAlign: 'center', padding: '48px 24px', color: '#94a3b8' }}>
@@ -319,6 +332,7 @@ export default function EventClient({ eventName }: { eventName: string }) {
                   )}
                 </>
               )}
+              </div>
 
               {/* G6: Action checklist */}
               {matches.length > 0 && (

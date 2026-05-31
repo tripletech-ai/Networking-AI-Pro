@@ -8,6 +8,7 @@ import EventControls from '@/components/EventControls';
 import MemberTable from '@/components/MemberTable';
 import EventStats from '@/components/EventStats';
 import PrintCodesButton from '@/components/PrintCodesButton';
+import AutoRefresh from '@/components/AutoRefresh';
 
 export default async function EventDashboardPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await getSession();
@@ -48,6 +49,7 @@ export default async function EventDashboardPage({ params }: { params: Promise<{
 
   return (
     <div style={{ minHeight: '100vh', padding: '60px 24px', background: '#f8fafc' }}>
+      <AutoRefresh intervalMs={20000} /> {/* 每 20 秒自動重新整理 */}
       <div style={{ maxWidth: 1024, margin: '0 auto' }}>
         
         <NavBackButton
