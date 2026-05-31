@@ -85,11 +85,14 @@ export default function EventClient({ eventName }: { eventName: string }) {
     setGuestData(data);
     setAppState('loading');
     setError('');
-    setProgress(10);
+    setProgress(0);
 
-    const t1 = setTimeout(() => setProgress(35), 3000);
-    const t2 = setTimeout(() => setProgress(60), 7000);
-    const t3 = setTimeout(() => setProgress(80), 12000);
+    // 用指数趋近让进度条平滑接近 92%，不跳跃
+    let _p = 0;
+    const progressInterval = setInterval(() => {
+      _p = _p + (92 - _p) * 0.025;
+      setProgress(Math.floor(_p));
+    }, 150);
 
     try {
       const res = await fetch('/api/match', {
@@ -98,7 +101,7 @@ export default function EventClient({ eventName }: { eventName: string }) {
         body: JSON.stringify({ ...data, mode: 'both', eventId }),
       });
 
-      clearTimeout(t1); clearTimeout(t2); clearTimeout(t3);
+      clearInterval(progressInterval);
       setProgress(100);
 
       const result = await res.json();
@@ -120,7 +123,7 @@ export default function EventClient({ eventName }: { eventName: string }) {
       setAppState('results');
       setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 600);
     } catch (err: unknown) {
-      clearTimeout(t1); clearTimeout(t2); clearTimeout(t3);
+      clearInterval(progressInterval);
       setError(err instanceof Error ? err.message : '未知錯誤');
       setAppState('checkin');
     }
@@ -317,8 +320,9 @@ export default function EventClient({ eventName }: { eventName: string }) {
                       </div>
                       <div style={{ fontSize: 14, color: '#64748b', lineHeight: 1.8, maxWidth: 320, margin: '0 auto 24px' }}>
                         您的商務資料已儲存完成。<br />
-                        目前活動尚無足夠嘉賓進行 AI 媒合，<br />
-                        等更多人報到後，媒合結果將更精準。
+                        現場無須預先報名 — 每位來賓現場登記即可。<br />
+                        等更多嘉賓報到後，按下方按鈕重新媒合，<br />
+                        結果會越來越精準。
                       </div>
                       <button
                         onClick={() => runAIMatch(guestData!)}
