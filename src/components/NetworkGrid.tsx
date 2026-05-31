@@ -154,13 +154,15 @@ export default function NetworkGrid({ grid, user, summary }: Props) {
             style={{
               position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
               background: 'rgba(15, 23, 42, 0.4)', backdropFilter: 'blur(8px)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              padding: '16px',
+              zIndex: 1000, overflowY: 'auto',
             }}
             onClick={closeModal}
           >
             <div
               className="perspective-1000"
-              style={{ width: 340, height: 480, cursor: 'pointer' }}
+              style={{ width: 'min(340px, 92vw)', height: 'min(480px, 80dvh)', cursor: 'pointer' }}
               onClick={(e) => { e.stopPropagation(); setIsFlipped(!isFlipped); }}
             >
               <motion.div

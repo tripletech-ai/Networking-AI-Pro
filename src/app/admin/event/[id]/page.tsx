@@ -113,9 +113,7 @@ export default async function EventDashboardPage({ params }: { params: Promise<{
             </div>
           </div>
 
-          <div style={{ overflowX: 'auto' }}>
-            <MemberTable members={membersForTable} eventId={event.id} />
-          </div>
+          <MemberTable members={membersForTable} eventId={event.id} />
         </div>
       </div>
     </div>

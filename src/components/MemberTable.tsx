@@ -64,8 +64,9 @@ export default function MemberTable({ members: initialMembers, eventId }: Props)
           style={{ padding: '8px 14px', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 14, width: '100%', maxWidth: 300 }}
         />
       </div>
-      <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-        <thead>
+      <div style={{ overflowX: 'auto', overflowY: 'auto', maxHeight: '60vh', borderRadius: 12, border: '1px solid #e2e8f0', position: 'relative' }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: 700 }}>
+        <thead style={{ position: 'sticky', top: 0, zIndex: 10 }}>
           <tr style={{ color: 'var(--text-secondary)', fontSize: 13, borderBottom: '2px solid var(--accent-slate)', background: 'var(--bg-secondary)' }}>
             <th style={{ padding: '16px', fontWeight: 700, letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>嘉賓姓名</th>
             <th style={{ padding: '16px', fontWeight: 700, letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>公司單位 / 職稱</th>
@@ -92,11 +93,11 @@ export default function MemberTable({ members: initialMembers, eventId }: Props)
               <td style={{ padding: '16px', fontFamily: 'monospace', fontWeight: 700, fontSize: 16, letterSpacing: '4px', color: '#475569' }}>
                 {member.checkinCode || '—'}
               </td>
-              <td style={{ padding: '16px' }}>
+              <td style={{ padding: '16px', whiteSpace: 'nowrap' }}>
                 {member.checkedIn ? (
-                  <span style={{ background: 'rgba(22,163,74,0.08)', color: '#16a34a', padding: '4px 12px', borderRadius: 20, fontSize: 12, fontWeight: 700 }}>✓ 已報到</span>
+                  <span style={{ background: 'rgba(22,163,74,0.08)', color: '#16a34a', padding: '4px 12px', borderRadius: 20, fontSize: 12, fontWeight: 700, whiteSpace: 'nowrap' }}>✓ 已報到</span>
                 ) : (
-                  <span style={{ background: '#f8fafc', color: '#94a3b8', padding: '4px 12px', borderRadius: 20, fontSize: 12, fontWeight: 600 }}>未報到</span>
+                  <span style={{ background: '#f8fafc', color: '#94a3b8', padding: '4px 12px', borderRadius: 20, fontSize: 12, fontWeight: 600, whiteSpace: 'nowrap' }}>未報到</span>
                 )}
               </td>
               <td style={{ padding: '16px', textAlign: 'right', whiteSpace: 'nowrap' }}>
@@ -155,6 +156,7 @@ export default function MemberTable({ members: initialMembers, eventId }: Props)
           ))}
         </tbody>
       </table>
+      </div>
 
       {filteredMembers.length === 0 && memberList.length > 0 && (
         <div style={{ textAlign: 'center', padding: '40px 0', color: '#64748b', fontSize: 14 }}>
