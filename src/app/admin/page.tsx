@@ -71,9 +71,12 @@ export default async function AdminDashboard() {
                   </div>
                   
                   <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 20, borderTop: '1px solid #f8fafc' }}>
-                    <div style={{ color: 'var(--accent-gold-dark)', fontWeight: 600 }}>
-                      <span style={{ fontSize: 28, fontWeight: 700, color: 'var(--accent-gold-dark)' }}>{(event as any).attendances?.length ?? 0}</span>
-                      <span style={{ fontSize: 13, color: '#94a3b8', marginLeft: 4 }}>/ {event._count?.attendances ?? 0} 已報到</span>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                      <div>
+                        <span style={{ fontSize: 28, fontWeight: 700, color: '#16a34a' }}>{(event as any).attendances?.length ?? 0}</span>
+                        <span style={{ fontSize: 13, color: '#64748b', marginLeft: 6 }}>已報到</span>
+                      </div>
+                      <div style={{ fontSize: 12, color: '#94a3b8' }}>共 {event._count?.attendances ?? 0} 位報名</div>
                     </div>
                     <div style={{ width: 40, height: 40, borderRadius: '50%', background: '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-gold)' }}>
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>

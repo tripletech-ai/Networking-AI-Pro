@@ -26,7 +26,6 @@ export default function MemberTable({ members: initialMembers, eventId }: Props)
   const [editingMember, setEditingMember] = useState<Member | null>(null);
   const [memberList, setMemberList] = useState<Member[]>(initialMembers);
   const [confirmingDelete, setConfirmingDelete] = useState<string | null>(null);
-  const [deleting, setDeleting] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const filteredMembers = memberList.filter(m =>
     !searchQuery || m.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -34,28 +33,23 @@ export default function MemberTable({ members: initialMembers, eventId }: Props)
   );
 
   const handleDelete = async (memberId: string) => {
-    setDeleting(true);
+    // 先樂觀刪除，讓 UI 立即回應
+    setMemberList(prev => prev.filter(m => m.id !== memberId));
+    setConfirmingDelete(null);
+
     try {
       const form = new FormData();
       form.append('eventId', eventId);
-      
       const res = await fetch(`/api/admin/members/${memberId}/delete`, {
         method: 'POST',
         body: form,
       });
-
-      if (res.ok) {
-        // Remove from local state immediately (no reload needed)
-        setMemberList(prev => prev.filter(m => m.id !== memberId));
-        setConfirmingDelete(null);
-      } else {
-        alert('刪除失敗，請再試一次');
+      if (!res.ok) {
+        // 刪除失敗，恢復原始列表（重新整理頁面）
+        window.location.reload();
       }
-    } catch (err) {
-      console.error('Delete error:', err);
-      alert('發生錯誤');
-    } finally {
-      setDeleting(false);
+    } catch {
+      window.location.reload();
     }
   };
 
@@ -73,13 +67,13 @@ export default function MemberTable({ members: initialMembers, eventId }: Props)
       <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
         <thead>
           <tr style={{ color: 'var(--text-secondary)', fontSize: 13, borderBottom: '2px solid var(--accent-slate)', background: 'var(--bg-secondary)' }}>
-            <th style={{ padding: '16px', fontWeight: 700, letterSpacing: '0.5px' }}>嘉賓姓名</th>
-            <th style={{ padding: '16px', fontWeight: 700, letterSpacing: '0.5px' }}>公司單位 / 職稱</th>
-            <th style={{ padding: '16px', fontWeight: 700, letterSpacing: '0.5px' }}>精準產業</th>
-            <th style={{ padding: '16px', fontWeight: 700, letterSpacing: '0.5px' }}>公會分會</th>
-            <th style={{ padding: '16px', fontWeight: 700, letterSpacing: '0.5px' }}>通關碼</th>
-            <th style={{ padding: '16px', fontWeight: 700, letterSpacing: '0.5px' }}>報到狀態</th>
-            <th style={{ padding: '16px', fontWeight: 700, letterSpacing: '0.5px', textAlign: 'right' }}>管理操作</th>
+            <th style={{ padding: '16px', fontWeight: 700, letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>嘉賓姓名</th>
+            <th style={{ padding: '16px', fontWeight: 700, letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>公司單位 / 職稱</th>
+            <th style={{ padding: '16px', fontWeight: 700, letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>精準產業</th>
+            <th style={{ padding: '16px', fontWeight: 700, letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>公會分會</th>
+            <th style={{ padding: '16px', fontWeight: 700, letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>通關碼</th>
+            <th style={{ padding: '16px', fontWeight: 700, letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>報到狀態</th>
+            <th style={{ padding: '16px', fontWeight: 700, letterSpacing: '0.5px', whiteSpace: 'nowrap', textAlign: 'right' }}>管理操作</th>
           </tr>
         </thead>
         <tbody>
@@ -111,16 +105,14 @@ export default function MemberTable({ members: initialMembers, eventId }: Props)
                     <span style={{ fontSize: 12, color: '#ef4444', marginRight: 4 }}>確定刪除？</span>
                     <button
                       onClick={() => handleDelete(member.id)}
-                      disabled={deleting}
                       style={{
                         cursor: 'pointer', background: '#ef4444',
                         border: 'none', color: '#fff',
                         padding: '6px 14px', borderRadius: '6px', fontSize: 13,
-                        opacity: deleting ? 0.5 : 1,
                         fontWeight: 600
                       }}
                     >
-                      {deleting ? '...' : '確認'}
+                      確認
                     </button>
                     <button
                       onClick={() => setConfirmingDelete(null)}
@@ -181,6 +173,10 @@ export default function MemberTable({ members: initialMembers, eventId }: Props)
           member={editingMember}
           eventId={eventId}
           onClose={() => setEditingMember(null)}
+          onSave={(updated) => {
+            setMemberList(prev => prev.map(m => m.id === updated.id ? { ...m, ...updated } : m));
+            setEditingMember(null);
+          }}
         />
       )}
     </>

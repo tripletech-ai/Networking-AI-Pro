@@ -12,6 +12,15 @@ import useSWR from 'swr';
 
 import type { GuestData, MatchData, GridPerson } from '@/types';
 
+function AnimatedDots() {
+  const [count, setCount] = useState(1);
+  useEffect(() => {
+    const id = setInterval(() => setCount(c => (c % 3) + 1), 500);
+    return () => clearInterval(id);
+  }, []);
+  return <span>{'•'.repeat(count)}</span>;
+}
+
 export default function EventClient({ eventName }: { eventName: string }) {
   const params = useParams();
   const eventId = params.id as string;
@@ -79,6 +88,7 @@ export default function EventClient({ eventName }: { eventName: string }) {
   };
 
   const runAIMatch = async (data: GuestData) => {
+    setActionsDone(new Set()); // 每次新的媒合都重置行動清單
     setGuestData(data);
     setAppState('loading');
     setError('');
@@ -135,6 +145,7 @@ export default function EventClient({ eventName }: { eventName: string }) {
     setGrid([]);
     setCheckinCode('');
     setCheckinError('');
+    setActionsDone(new Set());
     setAppState('checkin');
   };
 
@@ -209,7 +220,7 @@ export default function EventClient({ eventName }: { eventName: string }) {
                     className="btn-primary"
                     style={{ padding: '16px 28px', fontSize: 16, borderRadius: 12, opacity: checkinCode.length !== 4 ? 0.5 : 1 }}
                   >
-                    {checkinLoading ? '驗證中...' : '報到 →'}
+                    {checkinLoading ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>驗證中<AnimatedDots /></span> : '報到 →'}
                   </button>
                 </div>
                 {checkinError && <div style={{ color: '#ef4444', fontSize: 14, marginTop: 10 }}>{checkinError}</div>}
@@ -280,8 +291,40 @@ export default function EventClient({ eventName }: { eventName: string }) {
                 ))}
               </div>
 
-              {activeView === 'grid' && <NetworkGrid grid={grid} user={guestData} summary={gridSummary} />}
-              {activeView === 'match' && <MatchResult matches={matches} />}
+              {activeView === 'grid' && (
+                grid.length === 0 ? (
+                  <div style={{ textAlign: 'center', padding: '48px 24px', color: '#94a3b8' }}>
+                    等待更多嘉賓報到後，戰略九宮格將自動生成
+                  </div>
+                ) : (
+                  <NetworkGrid grid={grid} user={guestData} summary={gridSummary} />
+                )
+              )}
+              {activeView === 'match' && (
+                <>
+                  {matches.length === 0 ? (
+                    <div style={{ textAlign: 'center', padding: '48px 24px', background: '#fff', borderRadius: 16, border: '1px solid #e2e8f0' }}>
+                      <div style={{ fontSize: 40, marginBottom: 16 }}>🌱</div>
+                      <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--accent-blue)', marginBottom: 12 }}>
+                        您是活動的先鋒嘉賓！
+                      </div>
+                      <div style={{ fontSize: 14, color: '#64748b', lineHeight: 1.8, maxWidth: 320, margin: '0 auto 24px' }}>
+                        您的商務資料已儲存完成。<br />
+                        目前活動尚無足夠嘉賓進行 AI 媒合，<br />
+                        等更多人報到後，媒合結果將更精準。
+                      </div>
+                      <button
+                        onClick={() => runAIMatch(guestData!)}
+                        style={{ background: 'var(--accent-gold)', border: 'none', color: '#fff', padding: '12px 28px', borderRadius: 100, fontSize: 15, fontWeight: 700, cursor: 'pointer' }}
+                      >
+                        🔄 重新執行 AI 媒合
+                      </button>
+                    </div>
+                  ) : (
+                    <MatchResult matches={matches} />
+                  )}
+                </>
+              )}
 
               {/* G6: Action checklist */}
               {matches.length > 0 && (

@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { createPortal } from 'react-dom';
 
 interface MemberData {
@@ -20,10 +19,10 @@ interface Props {
   member: MemberData;
   eventId: string;
   onClose: () => void;
+  onSave: (updated: MemberData) => void;
 }
 
-export default function MemberEditModal({ member, eventId, onClose }: Props) {
-  const router = useRouter();
+export default function MemberEditModal({ member, eventId, onClose, onSave }: Props) {
   const [form, setForm] = useState<MemberData>({ ...member });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -40,7 +39,7 @@ export default function MemberEditModal({ member, eventId, onClose }: Props) {
       });
       const data = await res.json();
       if (data.success) {
-        router.refresh();
+        onSave({ ...form });
         onClose();
       } else {
         setError(data.error || '儲存失敗');
