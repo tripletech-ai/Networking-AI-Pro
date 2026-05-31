@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import AnimatedDots from '@/components/AnimatedDots';
 
 interface MemberData {
   id: string;
@@ -130,7 +131,7 @@ export default function MemberEditModal({ member, eventId, onClose, onSave }: Pr
             disabled={loading}
             style={{ flex: 1, padding: '12px', fontSize: 14 }}
           >
-            {loading ? '儲存中...' : '儲存變更'}
+            {loading ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>儲存中<AnimatedDots /></span> : '儲存變更'}
           </button>
         </div>
       </div>

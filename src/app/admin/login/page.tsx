@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import AnimatedDots from '@/components/AnimatedDots';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('admin@networking-ai.com');
@@ -103,7 +104,7 @@ export default function LoginPage() {
             {loading ? (
               <>
                 <span style={{ display: 'inline-block', width: 16, height: 16, border: '2px solid rgba(255,255,255,0.3)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
-                驗證中...
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>驗證中<AnimatedDots /></span>
                 <style>{`@keyframes spin { 100% { transform: rotate(360deg); } }`}</style>
               </>
             ) : '進入後台控制面板'}

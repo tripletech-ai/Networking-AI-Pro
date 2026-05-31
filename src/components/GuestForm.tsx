@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { GuestData } from '@/types';
+import AnimatedDots from '@/components/AnimatedDots';
 
 interface Props {
   onSubmit: (data: GuestData) => void;
@@ -238,7 +239,7 @@ export default function GuestForm({ onSubmit, error }: Props) {
           style={{ width: '100%', marginTop: 36, padding: '16px', fontSize: 16, opacity: isSubmitting ? 0.7 : 1, transition: 'opacity 0.2s' }}
           disabled={isSubmitting}
         >
-          {isSubmitting ? <><Spinner />AI 分析中，請稍候...</> : '儲存資料並啟動高階運算'}
+          {isSubmitting ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}><Spinner />AI 分析中<AnimatedDots /></span> : '儲存資料並啟動高階運算'}
         </button>
       </form>
     </div>
