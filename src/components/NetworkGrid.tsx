@@ -122,7 +122,7 @@ export default function NetworkGrid({ grid, user, summary }: Props) {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginBottom: 32 }}>
+      <div className="network-grid-container" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginBottom: 32 }}>
         {renderGridCell(0)}
         {renderGridCell(1)}
         {renderGridCell(2)}

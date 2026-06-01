@@ -374,7 +374,7 @@ export default function EventClient({ eventName }: { eventName: string }) {
 
               {/* G6: Action checklist */}
               {matches.length > 0 && (
-                <div className="glass-card" style={{ marginTop: 32, padding: 28, background: '#fff', border: '1px solid #e2e8f0' }}>
+                <div className="glass-card action-checklist" style={{ marginTop: 32, padding: 28, background: '#fff', border: '1px solid #e2e8f0' }}>
                   <div style={{ fontSize: 13, color: '#c5a880', fontWeight: 700, letterSpacing: '1px', marginBottom: 16 }}>今日行動清單</div>
                   <p style={{ fontSize: 14, color: '#64748b', marginBottom: 20 }}>完成媒合後，記得去找這幾位！打個招呼，掃他們的名片 QR Code。</p>
                   {matches.map((m: MatchData) => (

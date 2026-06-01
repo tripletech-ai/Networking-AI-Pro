@@ -38,7 +38,16 @@ html, body {
 
 /* 重要資訊使用的襯線體類別 - 加入平滑渲染 */
 .font-serif {
-  font-family: 'Playfair Display', 'Noto Serif TC', serif;
+  font-family:
+    'Playfair Display',      /* 優先英文字用這個 */
+    'Noto Serif TC',          /* Google Font 中文有襯線 */
+    'STSong',                 /* macOS/iOS 系統中文有襯線（無需下載）*/
+    '华文宋体',               /* macOS 另一個宋體名稱 */
+    'FangSong',               /* Windows 仿宋 */
+    '仿宋',                   /* Windows 仿宋（中文名）*/
+    'Songti SC',              /* macOS 宋體-簡 */
+    'Georgia',                /* 英文有襯線備用 */
+    serif;
   font-display: swap;
 }
 
@@ -295,13 +304,118 @@ body::before {
 
   /* Playfair Display 在小螢幕降階，確保可讀性 */
   .font-serif {
-    font-family: 'Noto Serif TC', 'Georgia', serif !important;
+    font-family:
+      'STSong', '华文宋体', 'FangSong', '仿宋', 'Songti SC',
+      'Noto Serif TC', 'Georgia', serif !important;
     letter-spacing: 0.3px !important;
+  }
+
+  /* 結果頁 match/grid 卡片在手機不要 hover 效果（避免觸控 stuck）*/
+  .glass-card:hover {
+    transform: none !important;
+  }
+
+  /* 九宮格在手機縮小 gap */
+  .network-grid-container {
+    gap: 8px !important;
+  }
+
+  /* loading 頁面在手機縮小 padding */
+  .loading-screen {
+    padding: 60px 20px !important;
+  }
+
+  /* 行動清單 margin 縮小 */
+  .action-checklist {
+    margin-top: 20px !important;
+    padding: 20px 16px !important;
   }
 
   /* 事件頁大標題 */
   h1 {
     font-size: clamp(22px, 6vw, 32px) !important;
+  }
+
+  /* ========== 管理後台 RWD ========== */
+
+  /* 後台頁面整體 padding 縮小 */
+  .admin-page {
+    padding: 24px 16px !important;
+  }
+
+  /* 後台 header：垂直排列 */
+  .admin-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 16px !important;
+  }
+
+  /* 後台 header 按鈕區 */
+  .admin-header-actions {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+  .admin-header-actions a,
+  .admin-header-actions button,
+  .admin-header-actions form button {
+    flex: 1 1 auto !important;
+    min-width: 120px !important;
+    text-align: center !important;
+    padding: 10px 12px !important;
+    font-size: 13px !important;
+  }
+
+  /* 儀表板標題字體縮小 */
+  .admin-title {
+    font-size: 22px !important;
+  }
+
+  /* 活動卡片：垂直全寬 */
+  .admin-events-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* 活動詳情頁 header：垂直排列 */
+  .event-detail-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 16px !important;
+  }
+
+  /* 活動詳情頁按鈕行：wrap */
+  .event-detail-buttons {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+  .event-detail-buttons a,
+  .event-detail-buttons button {
+    flex: 1 1 auto !important;
+    min-width: 140px !important;
+    font-size: 13px !important;
+    padding: 10px 12px !important;
+  }
+
+  /* 匯出按鈕行 */
+  .export-buttons {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+  .export-buttons a,
+  .export-buttons button {
+    flex: 1 1 auto !important;
+    text-align: center !important;
+  }
+
+  /* 統計卡片：2欄格 */
+  .admin-stats-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  /* 活動詳情標題 */
+  .event-detail-title {
+    font-size: 22px !important;
   }
 }
 
