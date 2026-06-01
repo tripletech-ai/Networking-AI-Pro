@@ -24,7 +24,7 @@ function normalizeChapter(raw: string): string {
 }
 
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-const RATE_LIMIT = 5;
+const RATE_LIMIT = 10;
 const RATE_WINDOW_MS = 5 * 60 * 1000;
 
 function checkRateLimit(ip: string): boolean {
@@ -94,26 +94,29 @@ export async function POST(req: NextRequest) {
   try {
     if (!OPENAI_API_KEY) return NextResponse.json({ error: 'API key 未設定' }, { status: 500 });
 
-    const ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? 'unknown';
-    if (!checkRateLimit(ip)) {
-      return NextResponse.json({ error: '請求過於頻繁，請稍後再試' }, { status: 429 });
-    }
-
     const body = await req.json();
     const { name, chapter, mode, company, title, industry, services, lookingFor, painPoints, isWalkIn, eventId } = body;
 
-    // Active event guard
+    // Active event guard — store result to avoid a second DB round-trip below
+    let currentEvent = null;
     if (eventId) {
-      const ev = await prisma.event.findUnique({ where: { id: eventId } });
-      if (!ev || !ev.isActive) return NextResponse.json({ error: '活動不存在或已結束' }, { status: 404 });
+      currentEvent = await prisma.event.findUnique({ where: { id: eventId } });
+      if (!currentEvent || !currentEvent.isActive) return NextResponse.json({ error: '活動不存在或已結束' }, { status: 404 });
     }
 
-    // Auth guard: registered members must have a valid checkin-token for this event.
-    // Walk-ins are exempt — they create their record in this same call.
+    // Auth guard + rate limit
+    // Already-checked-in members carry a cookie; walk-ins fall through to IP rate limiting.
     if (!isWalkIn && eventId) {
+      // Registered guest: must have a valid checkin-token — not subject to IP rate limit
       const session = await getCheckinSession(eventId);
       if (!session) {
         return NextResponse.json({ error: '請先完成報到' }, { status: 401 });
+      }
+    } else if (isWalkIn) {
+      // Walk-in guest: apply IP rate limit (max 10 requests per IP per 5 min)
+      const ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? 'unknown';
+      if (!checkRateLimit(ip)) {
+        return NextResponse.json({ error: '請求過於頻繁，請稍後再試' }, { status: 429 });
       }
     }
 
@@ -122,9 +125,7 @@ export async function POST(req: NextRequest) {
 
     let returnedMemberId = body.id ?? null;
 
-    let organizerId: string | null = null;
-    const currentEvent = eventId ? await prisma.event.findUnique({ where: { id: eventId } }) : null;
-    if (currentEvent) organizerId = currentEvent.organizerId;
+    const organizerId: string | null = currentEvent?.organizerId ?? null;
 
     // Write to DB only on match or both mode (not grid-only)
     if (isWalkIn && eventId && organizerId && (mode === 'match' || mode === 'both')) {

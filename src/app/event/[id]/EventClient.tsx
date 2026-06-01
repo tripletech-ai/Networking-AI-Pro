@@ -24,6 +24,7 @@ export default function EventClient({ eventName }: { eventName: string }) {
   const [gridSummary, setGridSummary] = useState('');
   const [activeView, setActiveView] = useState<'match' | 'grid'>('match');
   const [error, setError] = useState('');
+  const [matchError, setMatchError] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
   const [actionsDone, setActionsDone] = useState<Set<string>>(new Set());
 
@@ -85,6 +86,7 @@ export default function EventClient({ eventName }: { eventName: string }) {
     setGuestData(data);
     setAppState('loading');
     setError('');
+    setMatchError(null); // 清除上次錯誤
     setProgress(0);
 
     // 用指数趋近让进度条平滑接近 92%，不跳跃
@@ -124,8 +126,20 @@ export default function EventClient({ eventName }: { eventName: string }) {
       setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 600);
     } catch (err: unknown) {
       clearInterval(progressInterval);
-      setError(err instanceof Error ? err.message : '未知錯誤');
-      setAppState('checkin');
+      const msg = err instanceof Error ? err.message : '未知錯誤';
+      // 特定錯誤顯示友善訊息
+      if (msg.includes('429') || msg.includes('頻繁')) {
+        setMatchError('請求過於頻繁，請等待 2 分鐘後重試');
+      } else if (msg.includes('401') || msg.includes('報到')) {
+        setMatchError('報到驗證已失效，請重新輸入通關碼');
+        setAppState('checkin'); // 這個情況才需要跳回
+      } else if (msg.includes('404') || msg.includes('活動')) {
+        setMatchError('活動已結束或不存在');
+      } else {
+        setMatchError('AI 媒合暫時失敗，請點下方按鈕重試');
+      }
+      setProgress(0);
+      // 不要 setAppState('checkin') — 留在 loading 頁面顯示錯誤
     }
   };
 
@@ -250,6 +264,7 @@ export default function EventClient({ eventName }: { eventName: string }) {
 
           {appState === 'loading' && (
             <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="loading-screen"
               style={{ textAlign: 'center', padding: '100px 20px' }}>
               <div style={{ position: 'relative', width: 80, height: 80, margin: '0 auto 40px' }}>
                 <div style={{ position: 'absolute', inset: 0, border: '2px solid rgba(197, 168, 128, 0.1)', borderRadius: '50%' }} />
@@ -266,6 +281,25 @@ export default function EventClient({ eventName }: { eventName: string }) {
                 <div style={{ height: '100%', background: 'linear-gradient(90deg, #c5a880, #8c7355)', width: `${progress}%`, transition: 'width 1s ease', borderRadius: 2 }} />
               </div>
               <div style={{ fontSize: 12, color: '#64748b', marginTop: 12 }}>{progress}%</div>
+              {matchError && (
+                <div style={{ marginTop: 24, padding: '20px 24px', background: '#fff', borderRadius: 12, border: '1px solid #fee2e2', maxWidth: 360, margin: '24px auto 0' }}>
+                  <div style={{ color: '#ef4444', fontSize: 14, marginBottom: 16, fontWeight: 600 }}>⚠️ {matchError}</div>
+                  <button
+                    onClick={() => { setMatchError(null); guestData && runAIMatch(guestData); }}
+                    style={{ width: '100%', padding: '12px', background: 'var(--accent-gold)', border: 'none', borderRadius: 8, color: '#fff', fontSize: 15, fontWeight: 700, cursor: 'pointer' }}
+                  >
+                    重新嘗試
+                  </button>
+                  {matchError.includes('報到驗證') && (
+                    <button
+                      onClick={() => { setMatchError(null); clearSession(); }}
+                      style={{ width: '100%', padding: '10px', background: 'transparent', border: 'none', color: '#64748b', fontSize: 13, cursor: 'pointer', marginTop: 8 }}
+                    >
+                      重新輸入通關碼
+                    </button>
+                  )}
+                </div>
+              )}
             </motion.div>
           )}
 
