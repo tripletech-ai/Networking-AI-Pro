@@ -38,6 +38,15 @@ export default function EventClient({ eventName }: { eventName: string }) {
 
   const [showMyQR, setShowMyQR] = useState(false);
 
+  // Pre-warm Netlify serverless function on page load to eliminate cold start delay
+  useEffect(() => {
+    fetch('/api/match', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ping: true }),
+    }).catch(() => {});
+  }, []);
+
   // G8: restore results from localStorage on mount
   useEffect(() => {
     try {

@@ -1,27 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getCheckinSession, signCheckinToken } from '@/lib/auth';
+import { normalizeChapter } from '@/lib/normalizeChapter';
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-
-// 分會名稱正規化：統一同一分會的各種寫法
-function normalizeChapter(raw: string): string {
-  const s = (raw || '').trim().replace(/\s+/g, '');
-  // 長輝系列
-  if (s.includes('長輝')) return '長輝分會';
-  // 劉當莊 / 劉當
-  if (s.includes('劉當')) return '劉當莊分會';
-  // 金鑫系列
-  if (s.includes('金鑫')) return '金鑫分會';
-  // 長翔
-  if (s.includes('長翔')) return '長翔分會';
-  // 大漢
-  if (s.includes('大漢')) return '大漢分會';
-  // 通用處理：移除「分會」結尾後重新加上
-  const cleaned = s.replace(/分會$/,'').replace(/白金$/, '').replace(/菁英$/, '');
-  if (!cleaned || cleaned === '貴賓' || cleaned === '無') return cleaned || '貴賓';
-  return cleaned + '分會';
-}
 
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 const RATE_LIMIT = 10;
@@ -92,9 +74,15 @@ async function callLLM(userMessage: string): Promise<string> {
 
 export async function POST(req: NextRequest) {
   try {
+    const body = await req.json();
+
+    // Pre-warm ping — just wake up the serverless function, no processing needed
+    if (body.ping === true) {
+      return NextResponse.json({ pong: true });
+    }
+
     if (!OPENAI_API_KEY) return NextResponse.json({ error: 'API key 未設定' }, { status: 500 });
 
-    const body = await req.json();
     const { name, chapter, mode, company, title, industry, services, lookingFor, painPoints, isWalkIn, eventId } = body;
 
     // Active event guard — store result to avoid a second DB round-trip below

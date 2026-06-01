@@ -1,5 +1,7 @@
 'use client';
 
+import { normalizeChapter } from '@/lib/normalizeChapter';
+
 interface Props {
   members: any[];
   attendances: any[];
@@ -15,10 +17,10 @@ export default function EventStats({ members, attendances }: Props) {
   const sortedIndustries = Object.entries(industryMap).sort((a, b) => b[1] - a[1]);
   const maxCount = Math.max(...Object.values(industryMap), 1);
 
-  // 分會分布
+  // 分會分布（正規化後合併同一分會的不同寫法）
   const chapterMap: Record<string, number> = {};
   members.forEach(m => {
-    const ch = m.chapter || '無';
+    const ch = normalizeChapter(m.chapter || '無');
     chapterMap[ch] = (chapterMap[ch] || 0) + 1;
   });
   const sortedChapters: [string, number][] = Object.entries(chapterMap).sort((a, b) => b[1] - a[1]).slice(0, 8);
