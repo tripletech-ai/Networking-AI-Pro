@@ -53,8 +53,8 @@ export default function LoginPage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8fafc' }}>
-      <div className="glass-card fade-in-up" style={{ width: 400, padding: 40, borderTop: '4px solid var(--accent-gold)' }}>
+    <div className="admin-page" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8fafc' }}>
+      <div className="glass-card fade-in-up admin-login-card" style={{ width: 400, padding: 40, borderTop: '4px solid var(--accent-gold)' }}>
         
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
           <div style={{

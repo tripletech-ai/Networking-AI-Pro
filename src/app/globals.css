@@ -343,6 +343,17 @@ body::before {
     padding: 24px 16px !important;
   }
 
+  /* 登入卡片 */
+  .admin-login-card {
+    width: 100% !important;
+    padding: 28px 20px !important;
+  }
+
+  /* import/new event page */
+  .admin-new-event-page {
+    padding: 32px 16px !important;
+  }
+
   /* 後台 header：垂直排列 */
   .admin-header {
     flex-direction: column !important;

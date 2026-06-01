@@ -185,7 +185,7 @@ export default function EventClient({ eventName }: { eventName: string }) {
         </button>
 
         {appState === 'results' && (
-          <div style={{ display: 'flex', gap: 8 }}>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
             <button
               onClick={() => guestData && runAIMatch({ ...guestData })}
               style={{ background: 'transparent', border: '1px solid rgba(197, 168, 128, 0.3)', borderRadius: 8, color: '#c5a880', padding: '8px 14px', fontSize: 13, cursor: 'pointer' }}
@@ -281,6 +281,12 @@ export default function EventClient({ eventName }: { eventName: string }) {
                 <div style={{ height: '100%', background: 'linear-gradient(90deg, #c5a880, #8c7355)', width: `${progress}%`, transition: 'width 1s ease', borderRadius: 2 }} />
               </div>
               <div style={{ fontSize: 12, color: '#64748b', marginTop: 12 }}>{progress}%</div>
+              <button
+                onClick={() => { setMatchError(null); setProgress(0); setAppState('checkin'); }}
+                style={{ marginTop: 24, background: 'transparent', border: 'none', color: '#94a3b8', fontSize: 13, cursor: 'pointer' }}
+              >
+                取消
+              </button>
               {matchError && (
                 <div style={{ marginTop: 24, padding: '20px 24px', background: '#fff', borderRadius: 12, border: '1px solid #fee2e2', maxWidth: 360, margin: '24px auto 0' }}>
                   <div style={{ color: '#ef4444', fontSize: 14, marginBottom: 16, fontWeight: 600 }}>⚠️ {matchError}</div>

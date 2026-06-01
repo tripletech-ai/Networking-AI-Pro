@@ -87,6 +87,9 @@ export default function MemberTable({ members: initialMembers, eventId }: Props)
           </button>
         ))}
       </div>
+      <div style={{ fontSize: 12, color: '#94a3b8', marginBottom: 6, textAlign: 'right' }}>
+        ← 左右滑動查看更多欄位 →
+      </div>
       <div style={{ overflowX: 'auto', overflowY: 'auto', maxHeight: '60vh', borderRadius: 12, border: '1px solid #e2e8f0', position: 'relative' }}>
       <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: 700 }}>
         <thead style={{ position: 'sticky', top: 0, zIndex: 10 }}>
