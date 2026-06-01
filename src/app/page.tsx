@@ -12,138 +12,146 @@ export default function Home() {
       setIsAdmin(true);
     }
   }, []);
+
   const fadeInUp: Variants = {
-    hidden: { opacity: 0, y: 40 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.23, 1, 0.32, 1] } }
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.23, 1, 0.32, 1] } }
   };
 
   const staggerContainer: Variants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.2 } }
+    visible: { opacity: 1, transition: { staggerChildren: 0.15 } }
   };
 
   return (
     <main style={{ minHeight: '100vh', background: 'var(--bg-primary)', position: 'relative', overflowX: 'hidden' }}>
-      
-      {/* 頂部導覽列 */}
-      <nav style={{ padding: '24px 48px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'absolute', top: 0, width: '100%', zIndex: 50 }}>
-        <div className="font-serif" style={{ fontSize: 22, color: 'var(--accent-blue)', fontWeight: 700, letterSpacing: '0.5px' }}>
+
+      {/* 導覽列 */}
+      <nav className="landing-nav" style={{ padding: '20px 48px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'absolute', top: 0, width: '100%', zIndex: 50, boxSizing: 'border-box' }}>
+        <div className="font-serif" style={{ fontSize: 20, color: 'var(--accent-blue)', fontWeight: 700, letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>
           AI Networking <span style={{ color: 'var(--accent-gold)' }}>Pro</span>
         </div>
-        <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
-          <Link href="/guide" className="btn-outline" style={{ padding: '8px 24px', fontSize: 13, borderColor: 'transparent', fontWeight: 500 }}>
-            系統圖文教學
+        <div className="landing-nav-links" style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+          <Link href="/guide" style={{ padding: '8px 20px', fontSize: 13, borderRadius: 8, border: '1px solid rgba(15,23,42,0.12)', color: 'var(--accent-blue)', textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' }}>
+            使用說明
           </Link>
-          <Link href={isAdmin ? "/admin" : "/admin/login"} className="btn-primary" style={{ padding: '8px 24px', fontSize: 13 }}>
-            {isAdmin ? '返回主辦方後台' : '主辦方登入'}
+          <Link href={isAdmin ? '/admin' : '/admin/login'} style={{ padding: '8px 20px', fontSize: 13, borderRadius: 8, background: 'var(--accent-blue)', color: '#fff', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>
+            {isAdmin ? '後台' : '主辦方登入'}
           </Link>
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section style={{ position: 'relative', paddingTop: '180px', paddingBottom: '140px', minHeight: '95vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-        
-        {/* 背景裝飾 - 更優雅的層次感 */}
-        <div style={{
-          position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-          background: 'radial-gradient(circle at 10% 20%, rgba(197, 168, 128, 0.04) 0%, transparent 40%), radial-gradient(circle at 90% 80%, rgba(15, 23, 42, 0.03) 0%, transparent 40%)',
-          zIndex: 0, pointerEvents: 'none'
-        }} />
+      {/* Hero */}
+      <section className="hero-section" style={{ position: 'relative', paddingTop: '160px', paddingBottom: '120px', minHeight: '90vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
 
-        <motion.div variants={staggerContainer} initial="hidden" animate="visible" style={{ position: 'relative', zIndex: 10, textAlign: 'center', maxWidth: 960, padding: '0 24px' }}>
-          
-          <motion.div variants={fadeInUp} style={{ color: 'var(--accent-gold)', fontSize: 13, letterSpacing: '6px', fontWeight: 700, marginBottom: 28, textTransform: 'uppercase', opacity: 0.9 }}>
-            THE ELITE BUSINESS ALGORITHM
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'radial-gradient(circle at 15% 25%, rgba(197,168,128,0.05) 0%, transparent 45%)', zIndex: 0, pointerEvents: 'none' }} />
+
+        <motion.div variants={staggerContainer} initial="hidden" animate="visible" style={{ position: 'relative', zIndex: 10, textAlign: 'center', maxWidth: 900, padding: '0 24px' }}>
+
+          <motion.div variants={fadeInUp} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: 'var(--accent-gold-dark)', fontSize: 12, letterSpacing: '4px', fontWeight: 700, marginBottom: 32, textTransform: 'uppercase', border: '1px solid rgba(197,168,128,0.3)', padding: '6px 16px', borderRadius: 100 }}>
+            AI-POWERED · BNI NETWORKING
           </motion.div>
-          
-          <motion.h1 className="font-serif" variants={fadeInUp} style={{ fontSize: 'clamp(48px, 8vw, 82px)', fontWeight: 800, color: 'var(--accent-blue)', lineHeight: 1.1, marginBottom: 36, letterSpacing: '-1px' }}>
+
+          <motion.h1 className="font-serif" variants={fadeInUp} style={{ fontSize: 'clamp(40px, 7vw, 76px)', fontWeight: 800, color: 'var(--accent-blue)', lineHeight: 1.08, marginBottom: 28, letterSpacing: '-0.5px' }}>
             重新定義商務社交<br />
-            <span className="gradient-text-gold">遇見黃金跳板夥伴</span>
+            <span style={{ color: 'var(--accent-gold)' }}>遇見黃金跳板夥伴</span>
           </motion.h1>
 
-          <motion.p variants={fadeInUp} style={{ fontSize: 'clamp(17px, 2vw, 20px)', color: 'var(--text-secondary)', lineHeight: 1.85, maxWidth: 680, margin: '0 auto 56px', fontWeight: 400 }}>
-            利用 AI 語意分析引擎，突破表層名片的侷限。深入解析「痛點、資源與供應鏈」，為每一位賓客計算專屬的資源互補矩陣。
+          <motion.p variants={fadeInUp} style={{ fontSize: 'clamp(16px, 2vw, 19px)', color: 'var(--text-secondary)', lineHeight: 1.8, maxWidth: 600, margin: '0 auto 48px' }}>
+            AI 語意分析引擎深度解析每位嘉賓的痛點與資源，計算出真正互補的商務配對，而不只是名片交換。
           </motion.p>
-          
-          <motion.div variants={fadeInUp} style={{ display: 'flex', gap: 24, justifyContent: 'center' }}>
-            <Link href="/guide" className="btn-gold" style={{ padding: '20px 56px', fontSize: 17, borderRadius: 100 }}>
-              了解 AI 運作方式
+
+          <motion.div variants={fadeInUp} className="hero-cta-group" style={{ display: 'flex', gap: 16, justifyContent: 'center' }}>
+            <Link href="/admin/login" style={{ padding: '16px 48px', fontSize: 16, borderRadius: 100, background: 'var(--accent-gold)', color: '#fff', textDecoration: 'none', fontWeight: 700, letterSpacing: '0.3px', display: 'inline-block' }}>
+              立即開始使用
             </Link>
-            <Link href="/admin/login" className="btn-outline" style={{ padding: '20px 56px', fontSize: 17, borderRadius: 100 }}>
-              立即開始交流
+            <Link href="/guide" style={{ padding: '16px 48px', fontSize: 16, borderRadius: 100, border: '1.5px solid rgba(15,23,42,0.2)', color: 'var(--accent-blue)', textDecoration: 'none', fontWeight: 600, display: 'inline-block' }}>
+              了解運作方式
             </Link>
+          </motion.div>
+
+          <motion.div variants={fadeInUp} style={{ marginTop: 48, display: 'flex', gap: 40, justifyContent: 'center', flexWrap: 'wrap' }}>
+            {[['4秒', '通關碼報到'], ['10秒', 'AI 媒合完成'], ['50+人', '已試用活動']].map(([num, label]) => (
+              <div key={label} style={{ textAlign: 'center' }}>
+                <div className="font-serif" style={{ fontSize: 28, fontWeight: 800, color: 'var(--accent-blue)' }}>{num}</div>
+                <div style={{ fontSize: 12, color: 'var(--text-muted)', letterSpacing: '1px', marginTop: 4 }}>{label}</div>
+              </div>
+            ))}
           </motion.div>
         </motion.div>
       </section>
 
-      {/* Feature 卡片區塊 (How it Works) */}
-      <section style={{ padding: '140px 24px', background: 'var(--bg-secondary)', position: 'relative' }}>
-        <div style={{ maxWidth: 1240, margin: '0 auto' }}>
-          
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}
-            style={{ textAlign: 'center', marginBottom: 96 }}
+      {/* Features — Editorial list, not card grid */}
+      <section className="feature-section" style={{ padding: '120px 24px', background: '#f9f8f6', position: 'relative' }}>
+        <div style={{ maxWidth: 900, margin: '0 auto' }}>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}
+            style={{ marginBottom: 72 }}
           >
-            <h2 className="font-serif" style={{ fontSize: 'clamp(36px, 4vw, 48px)', fontWeight: 800, color: 'var(--accent-blue)', letterSpacing: '-0.5px' }}>
-              打造高階商務生態圈
+            <div style={{ fontSize: 12, letterSpacing: '3px', color: 'var(--accent-gold-dark)', fontWeight: 700, marginBottom: 16, textTransform: 'uppercase' }}>HOW IT WORKS</div>
+            <h2 className="font-serif" style={{ fontSize: 'clamp(32px, 4vw, 44px)', fontWeight: 800, color: 'var(--accent-blue)', letterSpacing: '-0.5px' }}>
+              三步驟打造高階商務生態圈
             </h2>
-            <div style={{ width: 80, height: 4, background: 'var(--accent-gold)', margin: '32px auto 0', borderRadius: '2px' }} />
           </motion.div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: 32 }}>
-            
-            {/* Feature 1 */}
-            <motion.div 
-              initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0 }}
-              className="glass-card" style={{ padding: '48px 40px', background: '#fff' }}
+          {[
+            {
+              num: '01',
+              title: '通關碼報到 — 4 個字元，秒速入場',
+              desc: '主辦方匯入名單後，系統為每位嘉賓產生獨一無二的 4 碼通關碼。現場輸入即完成身份驗證，無需名字搜尋、無需排隊。現場空降的來賓透過 AI Magic Fill 一句話自動建檔，同樣流暢。',
+              delay: 0
+            },
+            {
+              num: '02',
+              title: 'AI 語意媒合 — 超越產業分類',
+              desc: '系統以向量座標計算每位嘉賓的「痛點、服務與需求」，找出真正互補的組合，而不是同產業的人堆在一起。三位黃金夥伴 + 戰略九宮格，附上具體破冰金句，讓對話從第一句就有意義。',
+              delay: 0.1
+            },
+            {
+              num: '03',
+              title: '數位名片 + 行動清單 — 讓緣分不散失',
+              desc: '每位嘉賓擁有專屬 QR Code 名片，對方掃描即可存入聯絡人。今日行動清單協助追蹤「打過招呼」的目標，讓活動結束後的後續跟進有所依據。',
+              delay: 0.2
+            }
+          ].map(({ num, title, desc, delay }) => (
+            <motion.div
+              key={num}
+              initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay }}
+              className="feature-item"
+              style={{ display: 'flex', gap: 48, paddingTop: 48, paddingBottom: 48, borderTop: '1px solid #e8e5e0', alignItems: 'flex-start' }}
             >
-              <div style={{ width: 56, height: 56, borderRadius: '16px', background: 'rgba(197, 168, 128, 0.08)', color: 'var(--accent-gold)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 32, border: '1px solid rgba(197, 168, 128, 0.15)' }}>
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <div className="feature-number font-serif" style={{ fontSize: 64, fontWeight: 800, color: 'rgba(197,168,128,0.18)', lineHeight: 1, minWidth: 96, flexShrink: 0, letterSpacing: '-2px' }}>
+                {num}
               </div>
-              <h3 className="font-serif" style={{ fontSize: 26, fontWeight: 700, color: 'var(--accent-blue)', marginBottom: 20 }}>零阻力雙軌報到</h3>
-              <p style={{ fontSize: 16, color: 'var(--text-secondary)', lineHeight: 1.8 }}>
-                完美支援「事前匯入表單」與「現場即時空降」。一鍵搜尋名字即可報到，現場報名者也能流暢填表，告別紙本報到排隊亂象。
-              </p>
-            </motion.div>
-
-            {/* Feature 2 */}
-            <motion.div 
-              initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }}
-              className="glass-card" style={{ padding: '48px 40px', background: '#fff' }}
-            >
-              <div style={{ width: 56, height: 56, borderRadius: '16px', background: 'rgba(197, 168, 128, 0.08)', color: 'var(--accent-gold)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 32, border: '1px solid rgba(197, 168, 128, 0.15)' }}>
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+              <div style={{ flex: 1, paddingTop: 8 }}>
+                <h3 className="font-serif" style={{ fontSize: 22, fontWeight: 700, color: 'var(--accent-blue)', marginBottom: 16, lineHeight: 1.3 }}>{title}</h3>
+                <p style={{ fontSize: 16, color: 'var(--text-secondary)', lineHeight: 1.8, maxWidth: 640 }}>{desc}</p>
               </div>
-              <h3 className="font-serif" style={{ fontSize: 26, fontWeight: 700, color: 'var(--accent-blue)', marginBottom: 20 }}>AI 語意匹配</h3>
-              <p style={{ fontSize: 16, color: 'var(--text-secondary)', lineHeight: 1.8 }}>
-                超越傳統產業分類。系統轉化每一位賓客的商業痛點為向量座標，精準配對雙方的「資源互補點」，提供針對性的破冰金句。
-              </p>
             </motion.div>
-
-            {/* Feature 3 */}
-            <motion.div 
-              initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.2 }}
-              className="glass-card" style={{ padding: '48px 40px', background: '#fff' }}
-            >
-              <div style={{ width: 56, height: 56, borderRadius: '16px', background: 'rgba(197, 168, 128, 0.08)', color: 'var(--accent-gold)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 32, border: '1px solid rgba(197, 168, 128, 0.15)' }}>
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-              </div>
-              <h3 className="font-serif" style={{ fontSize: 26, fontWeight: 700, color: 'var(--accent-blue)', marginBottom: 20 }}>雲端數位名片庫</h3>
-              <p style={{ fontSize: 16, color: 'var(--text-secondary)', lineHeight: 1.8 }}>
-                所有配對名單與交流紀錄隨時帶著走。專屬的個人 QR Code 數位名片，可讓對方一鍵掃描並點擊「記住此聯絡人」保存緣分。
-              </p>
-            </motion.div>
-          </div>
+          ))}
         </div>
       </section>
 
-      {/* 底部 Footer */}
-      <footer style={{ padding: '100px 24px 60px', borderTop: '1px solid #f1f5f9', textAlign: 'center', background: '#fff' }}>
-        <div className="font-serif" style={{ fontSize: 28, fontWeight: 800, color: 'var(--accent-blue)', marginBottom: 20 }}>
-          AI Networking <span style={{ color: 'var(--accent-gold)' }}>Pro</span>
-        </div>
-        <div style={{ color: 'var(--text-muted)', fontSize: 14, letterSpacing: '0.05em', fontWeight: 500 }}>
-          © 2026 AI Networking. All Rights Reserved. Designed for premium business events.
+      {/* CTA Footer */}
+      <section style={{ padding: '100px 24px', background: 'var(--accent-blue)', textAlign: 'center' }}>
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}>
+          <div className="font-serif" style={{ fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 800, color: '#fff', marginBottom: 20, letterSpacing: '-0.3px' }}>
+            準備好讓 AI 主導您的下一場交流會？
+          </div>
+          <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.6)', marginBottom: 40, maxWidth: 480, margin: '0 auto 40px' }}>
+            無需技術門檻。上傳報名名單，主辦方即可啟動。
+          </p>
+          <Link href="/admin/login" style={{ padding: '18px 56px', fontSize: 17, borderRadius: 100, background: 'var(--accent-gold)', color: '#fff', textDecoration: 'none', fontWeight: 700, display: 'inline-block' }}>
+            立即建立活動
+          </Link>
+        </motion.div>
+      </section>
+
+      {/* Footer */}
+      <footer style={{ padding: '40px 24px', borderTop: '1px solid rgba(255,255,255,0.05)', textAlign: 'center', background: 'var(--accent-blue)' }}>
+        <div style={{ color: 'rgba(255,255,255,0.3)', fontSize: 13, letterSpacing: '0.05em' }}>
+          © 2026 AI Networking Pro · Designed for premium business events
         </div>
       </footer>
 
