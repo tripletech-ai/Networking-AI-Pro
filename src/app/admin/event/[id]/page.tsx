@@ -48,7 +48,7 @@ export default async function EventDashboardPage({ params }: { params: Promise<{
   }));
 
   return (
-    <div style={{ minHeight: '100vh', padding: '60px 24px', background: '#f8fafc' }}>
+    <div className="admin-page" style={{ minHeight: '100vh', padding: '60px 24px', background: '#f8fafc' }}>
       <AutoRefresh intervalMs={20000} /> {/* 每 20 秒自動重新整理 */}
       <div style={{ maxWidth: 1024, margin: '0 auto' }}>
         
@@ -59,16 +59,16 @@ export default async function EventDashboardPage({ params }: { params: Promise<{
           style={{ color: 'var(--text-secondary)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8, marginBottom: 32, fontSize: 14, fontWeight: 500, background: 'none', border: 'none', padding: 0 }}
         />
         
-        <header style={{ marginBottom: 40, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <header className="event-detail-header" style={{ marginBottom: 40, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <div>
-            <h1 className="font-serif" style={{ fontSize: 32, fontWeight: 700, color: 'var(--accent-blue)', marginBottom: 8 }}>
+            <h1 className="font-serif admin-title event-detail-title" style={{ fontSize: 32, fontWeight: 700, color: 'var(--accent-blue)', marginBottom: 8 }}>
               {event.name}
             </h1>
             <p style={{ color: 'var(--text-secondary)', fontSize: 16, marginBottom: 24, fontWeight: 500 }}>
               共 {members.length} 位嘉賓已準備好進行 AI 媒合
             </p>
             <CopyLinkButton eventId={event.id} isActive={event.isActive} />
-            <div style={{ marginTop: 20, display: 'flex', gap: 12 }}>
+            <div className="event-detail-buttons" style={{ marginTop: 20, display: 'flex', gap: 12 }}>
                 <Link href={`/admin/event/${event.id}/dashboard`} className="btn-gold" style={{
                   display: 'inline-flex', alignItems: 'center', gap: 8,
                   padding: '12px 24px', borderRadius: 100,
@@ -98,7 +98,7 @@ export default async function EventDashboardPage({ params }: { params: Promise<{
         <div className="glass-card" style={{ padding: 40, background: '#fff' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32, borderBottom: '1px solid #f1f5f9', paddingBottom: 20 }}>
             <h2 className="font-serif" style={{ fontSize: 24, fontWeight: 700, color: 'var(--accent-blue)' }}>嘉賓名單管理</h2>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <div className="export-buttons" style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
               <a href={`/api/admin/event/${event.id}/export`} target="_blank" style={{ color: '#16a34a', background: 'rgba(22, 163, 74, 0.08)', padding: '8px 16px', borderRadius: 8, fontSize: 13, fontWeight: 600, textDecoration: 'none' }}>
                 ↓ 匯出 CSV
               </a>

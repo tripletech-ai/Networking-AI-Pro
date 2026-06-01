@@ -20,12 +20,12 @@ export default async function AdminDashboard() {
   });
 
   return (
-    <div style={{ minHeight: '100vh', padding: '60px 24px', background: '#f8fafc' }}>
+    <div className="admin-page" style={{ minHeight: '100vh', padding: '60px 24px', background: '#f8fafc' }}>
       <div style={{ maxWidth: 1024, margin: '0 auto' }}>
         
-        <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 48, borderBottom: '1px solid #e2e8f0', paddingBottom: 24 }}>
+        <header className="admin-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 48, borderBottom: '1px solid #e2e8f0', paddingBottom: 24 }}>
           <div>
-            <h1 className="font-serif" style={{ fontSize: 32, fontWeight: 700, color: 'var(--accent-blue)', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 12 }}>
+            <h1 className="font-serif admin-title" style={{ fontSize: 32, fontWeight: 700, color: 'var(--accent-blue)', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 12 }}>
               <div style={{ width: 8, height: 28, background: 'var(--accent-gold)', borderRadius: 4 }} />
               {String(session.name)} 主辦方儀表板
             </h1>
@@ -33,7 +33,7 @@ export default async function AdminDashboard() {
               PREMIUM EVENT MANAGEMENT CENTER
             </p>
           </div>
-          <div style={{ display: 'flex', gap: 16 }}>
+          <div className="admin-header-actions" style={{ display: 'flex', gap: 16 }}>
             <Link href="/" target="_blank" className="btn-outline" style={{ padding: '8px 24px', fontSize: 13, minWidth: 120, textAlign: 'center' }}>
               瀏覽品牌前台
             </Link>
@@ -58,7 +58,7 @@ export default async function AdminDashboard() {
             您目前還沒有建立任何活動。點擊上方按鈕建立您的第一場交流會。
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 24 }}>
+          <div className="admin-events-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 24 }}>
             {events.map((event: any) => (
               <Link prefetch={true} key={event.id} href={`/admin/event/${event.id}`} style={{ textDecoration: 'none' }}>
                 <div 
